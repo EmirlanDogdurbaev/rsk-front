@@ -1,55 +1,85 @@
-# React + TypeScript + Vite
+# 🛡️ RSK Front — Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**RSK Front** — это фронтенд-часть , построенный на чистом **React + Vite + TypeScript**, с использованием **Feature-Sliced Design (FSD)** архитектуры, UI-библиотеки `shadcn/ui` и стейт-менеджера `zustand`.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Стек технологий
 
-## Expanding the ESLint configuration
+- ⚛️ **React 18**
+- ⚡️ **Vite**
+- 🌀 **TypeScript**
+- 💨 **Tailwind CSS**
+- 🎨 **shadcn/ui** (Radix UI + Tailwind)
+- 🧠 **Zustand** (state management)
+- 🔗 **React Router**
+- 📁 **FSD архитектура** (Feature-Sliced Design)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📁 Архитектура (Feature-Sliced Design)
+
+```
+src/
+├── app/          # Инициализация приложения, роутер, провайдеры
+├── pages/        # Страницы, привязанные к маршрутам
+├── widgets/      # Крупные UI-блоки (Sidebar, Header и т.п.)
+├── features/     # Бизнес-операции (CreatePledge, LoginForm и т.п.)
+├── entities/     # Базовые сущности (Pledge, User)
+├── shared/
+│   ├── ui/       # Общие компоненты интерфейса (Input, Button и т.п.)
+│   ├── lib/      # Утилиты (cn, formatDate и т.п.)
+│   ├── hooks/    # Общие хуки
+│   ├── config/   # Константы, конфигурации, axios instance
+│   ├── types/    # Глобальные типы
+│   └── assets/   # Шрифты, иконки, картинки
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📦 Установка
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+git clone https://github.com/EmirlanDogdurbaev/rsk-front.git
+cd rsk-front
+npm install
 ```
-# rsk-front
+
+---
+
+## 🛠️ Скрипты
+
+| Скрипт         | Назначение                   |
+|----------------|------------------------------|
+| `npm run dev`  | Запустить проект в dev-режиме |
+| `npm run build`| Сборка проекта                |
+| `npm run preview` | Просмотр собранного проекта |
+
+---
+
+## 🌐 Переменные окружения
+
+Создай файл `.env` и добавь:
+
+```
+VITE_API_URL=http://localhost:3000/api
+```
+
+---
+
+## 🧠 Автор
+
+Разработано с ❤️ Эмирланом (@EmirlanDogdurbaev)  
+Проект для внутренней админки платформы **RSK**
+
+---
+
+## 📌 TODO
+
+- [ ] Интеграция с бекендом
+- [ ] Аутентификация и авторизация
+- [ ] Управление залогами (CRUD)
+- [ ] Таблицы, модалки, фильтры
+
+---
+

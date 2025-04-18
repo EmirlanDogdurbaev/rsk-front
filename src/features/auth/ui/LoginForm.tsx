@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../model/store";
 
 import Logo from "../../../shared/assets/logo.svg";
+import bg from "../../../shared/assets/bg.png";
 import { Button, Input } from "../../../shared/ui";
 import { Card, CardContent, CardHeader } from "../../../shared/ui/card";
 import { Eye, EyeOff } from "lucide-react";
@@ -27,7 +28,15 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center w-full">
+    <div
+      className="min-h-screen flex items-center justify-center w-full"
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "bottom",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <Card className=" shadow-lg w-[650px] h-[550px] flex flex-col justify-center">
         <CardHeader className="flex flex-col items-center justify-center w-[500px] mx-auto">
           <img src={Logo} alt="Bank Logo" className=" mb-4" />

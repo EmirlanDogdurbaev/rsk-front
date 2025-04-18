@@ -17,5 +17,4 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: data.email, loading: false });
     return result;
   },
-  
 }));

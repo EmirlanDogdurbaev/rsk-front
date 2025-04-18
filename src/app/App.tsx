@@ -1,26 +1,20 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { LoginForm } from "../features/auth/ui/LoginForm";
-import { Layout } from "./Layout";
 import Dashboard from "../pages/Dashboard";
+import { Layout } from "./Layout";
+import CollateralCreate from "../features/CollateralCreate/ui";
 
-const App = () => {
+function App() {
   const isAuth = true;
+  if (!isAuth) return <LoginForm />;
   return (
-    <>
-      {isAuth ? (
-        <Layout>
-          <Routes>
-            <Route path="/collateral" element={<Dashboard />} />
-          </Routes>
-        </Layout>
-      ) : (
-        <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      )}
-    </>
+    <Layout>
+      <Routes>
+        {/* <Route path="/collateral" element={<Dashboard />} /> */}
+        + <Route path="/collateral/" element={<CollateralCreate />} />
+      </Routes>
+    </Layout>
   );
-};
+}
 
 export default App;

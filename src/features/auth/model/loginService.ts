@@ -1,4 +1,4 @@
-import { api } from "../../../shared/api/axiosInstance";
+import { $api } from "../../../shared/api/axiosInstance";
 
 export interface LoginDto {
   email: string;
@@ -9,6 +9,6 @@ export const login = async ({
   email,
   password,
 }: LoginDto): Promise<{ token: string }> => {
-  const res = await api.post("/auth/login", { email, password });
+  const res = await $api.post("/auth/login", { email, password });
   return res.data;
 };

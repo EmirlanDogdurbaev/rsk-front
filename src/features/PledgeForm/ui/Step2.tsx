@@ -82,7 +82,7 @@ export default function Step2() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="px-0 py-6 space-y-6">
       {data.pledgors.map((pledgor, index) => (
         <PledgorCard
           key={index}

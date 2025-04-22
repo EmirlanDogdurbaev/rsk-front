@@ -1,4 +1,3 @@
-import { CalendarIcon } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Input } from "../../../shared/ui";

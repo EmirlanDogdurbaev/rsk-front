@@ -53,7 +53,7 @@ export default function Step1() {
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="px-0 py-6 space-y-4">
       <h2 className="text-lg font-semibold">Проверка залога</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>

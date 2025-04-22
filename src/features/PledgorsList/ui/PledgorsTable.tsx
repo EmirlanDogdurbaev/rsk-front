@@ -33,7 +33,7 @@ export function PledgorsTable({ pledgors }: PledgorsTableProps) {
             <th className="w-1/5 px-6 py-4 text-left text-sm font-medium text-gray-600 truncate">
               Номер телефона
             </th>
-            <th className="w-1/5 px-6 py-4 text-left text-sm font-medium text-gray-600 truncate">
+            <th className="w-1/5 px-6 py-4 text-left text-sm font-medium text-gray-600 truncate ">
               № доверенности
             </th>
           </tr>
@@ -53,7 +53,7 @@ export function PledgorsTable({ pledgors }: PledgorsTableProps) {
               <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">
                 {pledgor ? pledgor.orgName || "-" : ""}
               </td>
-              <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">
+              <td className="w-1/5 px-5 py-4 text-sm text-gray-900  align-middle ">
                 {pledgor ? pledgor.address || "-" : ""}
               </td>
               <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">

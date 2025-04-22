@@ -133,14 +133,14 @@ export default function Step3() {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 ">
           {files.map((file, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-2 border border-gray-300 rounded-lg"
+              className="  flex items-center justify-between p-2 border border-gray-300 rounded-lg "
             >
-              <div className="flex-1">
-                <div className="flex justify-between items-center">
+              <div className="flex-1 ">
+                <div className="flex justify-between items-center ">
                   <span
                     className={`text-sm ${
                       progress[index] === 100
@@ -178,13 +178,13 @@ export default function Step3() {
           <label className="block text-sm text-gray-600">
             Загрузить правоустанавливающие документы
           </label>
-          <div className="border-dashed border-2 border-gray-300 p-4 rounded-lg text-center">
+          <div className="border-dashed border-2 border-gray-300 p-4 rounded-lg text-center bg-white">
             <input
               type="file"
               multiple
               accept=".pdf,.docx,.txt"
               onChange={handleFileChange}
-              className="hidden"
+              className="hidden "
               id="file-upload"
             />
             <label htmlFor="file-upload" className="cursor-pointer">

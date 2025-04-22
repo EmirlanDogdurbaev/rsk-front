@@ -81,7 +81,7 @@ export function LegalPledgorForm({
             onChange={(date: Date | null) =>
               handleDateChange(date, "registration", index)
             }
-            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             placeholderText="MM / DD / YYYY"
             dateFormat="MM/dd/yyyy"
           />
@@ -126,7 +126,7 @@ export function LegalPledgorForm({
             onChange={(date: Date | null) =>
               handleDateChange(date, "birth", index)
             }
-            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             placeholderText="MM / DD / YYYY"
             dateFormat="MM/dd/yyyy"
           />
@@ -153,7 +153,7 @@ export function LegalPledgorForm({
             onChange={(date: Date | null) =>
               handleDateChange(date, "passportIssue", index)
             }
-            className="min-w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             placeholderText="MM / DD / YYYY"
             dateFormat="MM/dd/yyyy"
           />

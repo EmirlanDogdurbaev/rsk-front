@@ -19,7 +19,7 @@ export default function Step3() {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const newEniCode = Math.floor(100000 + Math.random() * 900000).toString(); // Генерируем случайный 6-значный код
+      const newEniCode = Math.floor(100000 + Math.random() * 900000).toString();
       setField("eniCode", newEniCode);
     } catch (error) {
       console.error("Ошибка при получении кода ЕНИ:", error);

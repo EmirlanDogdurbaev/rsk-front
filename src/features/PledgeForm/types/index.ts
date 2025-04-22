@@ -1,4 +1,5 @@
 export type Pledgor = {
+  id?: number;
   type: "individual" | "legal";
   lastName?: string;
   firstName?: string;
@@ -15,7 +16,10 @@ export type Pledgor = {
   representativeInn?: string;
   position?: string;
   document?: string;
+  address?: string;
+  phone?: string;
 };
+
 
 export type PledgeForm = {
   eniCode: string;

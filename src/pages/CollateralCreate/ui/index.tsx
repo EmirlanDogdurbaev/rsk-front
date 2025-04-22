@@ -20,7 +20,7 @@ export default function CollateralCreate() {
   return (
     <div className="p-3">
       <h1 className="text-3xl  mb-4 font-bold">Создание залога</h1>
-      <div className="space-y-6 bg-white/50 p-14">
+      <div className="space-y-3 bg-white/50 p-14">
         <div className="flex border-b border-gray-200">
           <button
             className={`flex-1 py-3 text-center text-sm font-medium rounded-sm  ${

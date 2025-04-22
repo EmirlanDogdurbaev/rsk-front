@@ -38,7 +38,6 @@ export function PledgorCard({
 }: PledgorCardProps) {
   return (
     <div className="space-y-4 relative">
-     
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Залогодатель №{index + 1}</h2>
         {canRemove && (

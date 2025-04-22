@@ -32,7 +32,7 @@ export default function Step2() {
           : null,
       };
       return acc;
-    }, {});
+    }, {} as Record<number, { birthDate: Date | null; regDate: Date | null; passportIssueDate: Date | null }>);
     setDates(initialDates);
   }, [data.pledgors]);
 

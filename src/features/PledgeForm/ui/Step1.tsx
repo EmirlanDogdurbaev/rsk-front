@@ -27,7 +27,7 @@ export default function Step1() {
       inn: "123456789012",
       pledgors: [
         {
-          type: "individual",
+          type: "individual" as const,
           lastName: "Иванов",
           firstName: "Иван",
           middleName: "Иванович",
@@ -36,6 +36,9 @@ export default function Step1() {
           birthDate: "01/01/1990",
           issuedBy: "УВД г. Алматы",
           passportIssueDate: "01/01/2010",
+          address: "",
+          phone: "",
+          document: "",
         },
       ],
       pledgeSubject: {
@@ -53,7 +56,7 @@ export default function Step1() {
   };
 
   return (
-    <div className="px-0 py-6 space-y-4">
+    <div className="px-0 py-3 space-y-4">
       <h2 className="text-lg font-semibold">Проверка залога</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>

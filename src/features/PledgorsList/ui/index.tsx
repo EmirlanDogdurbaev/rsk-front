@@ -12,6 +12,7 @@ const mockPledgors: PledgorList[] = [
     address: "г.Бишкек, ул. Усенбаева 44",
     phone: "+996 555 55 55 55",
     powerOfAttorney: "13232432432",
+    
   },
   {
     id: 2,

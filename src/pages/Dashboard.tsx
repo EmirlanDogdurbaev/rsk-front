@@ -1,6 +1,4 @@
-type IProps = {};
-
-const Dashboard = (props: IProps) => {
+const Dashboard = () => {
   return <div>Dashboard</div>;
 };
 

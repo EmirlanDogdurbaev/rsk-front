@@ -1,7 +1,7 @@
-import { PledgorList } from "../types";
+import { Pledgor } from "../types";
 
 type PledgorsTableProps = {
-  pledgors: PledgorList[];
+  pledgors: Pledgor[];
 };
 
 export function PledgorsTable({ pledgors }: PledgorsTableProps) {
@@ -41,7 +41,7 @@ export function PledgorsTable({ pledgors }: PledgorsTableProps) {
         <tbody>
           {tableRows.map((pledgor, index) => (
             <tr
-              key={pledgor?.id || index}
+              key={pledgor ? `pledgor-${pledgor.id}` : `empty-${index}`}
               className="border-t border-black/10 min-h-[60px]"
             >
               <td className="w-12 px-6 py-4 text-sm text-gray-900 truncate align-middle">
@@ -53,7 +53,7 @@ export function PledgorsTable({ pledgors }: PledgorsTableProps) {
               <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">
                 {pledgor ? pledgor.orgName || "-" : ""}
               </td>
-              <td className="w-1/5 px-5 py-4 text-sm text-gray-900  align-middle ">
+              <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">
                 {pledgor ? pledgor.address || "-" : ""}
               </td>
               <td className="w-1/5 px-6 py-4 text-sm text-gray-900 truncate align-middle">

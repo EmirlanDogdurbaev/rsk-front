@@ -13,29 +13,25 @@ type PledgorsFiltersProps = {
   period: string;
   searchFio: string;
   searchPowerOfAttorney: string;
-  type: string;
   onPeriodChange: (value: string) => void;
   onSearchFioChange: (value: string) => void;
   onSearchPowerOfAttorneyChange: (value: string) => void;
-  onTypeChange: (value: string) => void;
 };
 
 export function PledgorsFilters({
   period,
   searchFio,
   searchPowerOfAttorney,
-  type,
   onPeriodChange,
   onSearchFioChange,
   onSearchPowerOfAttorneyChange,
-  onTypeChange,
 }: PledgorsFiltersProps) {
   return (
-    <div className="flex space-x-4 mb-2 bg-white/70 items-center justify-between p-5 rounded-[5px] ">
-      <div className="flex space-x-4  items-center justify-between">
+    <div className="flex space-x-4 mb-2 bg-white/70 items-center justify-between p-5 rounded-[5px]">
+      <div className="flex space-x-4 items-center">
         <div>
           <Select value={period} onValueChange={onPeriodChange}>
-            <SelectTrigger className="min-w-50  border border-gray-300 rounded text-sm text-gray-700 p-4">
+            <SelectTrigger className="min-w-[150px] border border-gray-300 rounded text-sm text-gray-700 p-4">
               <div className="flex items-center">
                 <Calendar className="h-5 w-5 text-gray-400 mr-2" />
                 <SelectValue placeholder="Фильтр по времени" />
@@ -64,18 +60,6 @@ export function PledgorsFilters({
             onChange={(e) => onSearchPowerOfAttorneyChange(e.target.value)}
             className="w-64 p-4 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-        <div>
-          <Select value={type} onValueChange={onTypeChange}>
-            <SelectTrigger className="w-32 p-4 border border-gray-300 rounded text-sm text-gray-700">
-              <SelectValue placeholder="Фильтр" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Все</SelectItem>
-              <SelectItem value="individual">Физлицо</SelectItem>
-              <SelectItem value="legal">Юрлицо</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
       <PledgorsHeader />

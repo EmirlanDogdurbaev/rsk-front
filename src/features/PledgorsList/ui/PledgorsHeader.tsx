@@ -9,7 +9,7 @@ export function PledgorsHeader() {
   };
 
   return (
-    <div className="flex justify-between items-center ">
+    <div className="flex ">
       <Button
         className="bg-blue-600 text-white px-4 py-4 rounded-lg hover:bg-blue-700"
         onClick={handleAddPledgor}

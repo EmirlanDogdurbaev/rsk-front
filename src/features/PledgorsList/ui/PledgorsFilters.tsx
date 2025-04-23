@@ -7,7 +7,6 @@ import {
 } from "../../../shared/ui/select";
 import { Search, Calendar } from "lucide-react";
 import { Input } from "../../../shared/ui";
-import { PledgorsHeader } from "./PledgorsHeader";
 
 type PledgorsFiltersProps = {
   period: string;
@@ -27,7 +26,7 @@ export function PledgorsFilters({
   onSearchPowerOfAttorneyChange,
 }: PledgorsFiltersProps) {
   return (
-    <div className="flex space-x-4 mb-2 bg-white/70 items-center justify-between p-5 rounded-[5px]">
+    <div className="flex space-x-4   items-center justify-between ">
       <div className="flex space-x-4 items-center">
         <div>
           <Select value={period} onValueChange={onPeriodChange}>
@@ -62,7 +61,6 @@ export function PledgorsFilters({
           />
         </div>
       </div>
-      <PledgorsHeader />
     </div>
   );
 }

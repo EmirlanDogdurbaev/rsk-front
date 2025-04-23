@@ -7,6 +7,7 @@ import { PledgorsPagination } from "./PledgorsPagination";
 import { usePledgorsStore } from "../model/store";
 import { debounce } from "lodash";
 import { PledgorsFilter } from "../types";
+import { PledgorsHeader } from "./PledgorsHeader";
 
 export function PledgorsList() {
   const {
@@ -46,16 +47,21 @@ export function PledgorsList() {
 
   return (
     <div className=" p-6 pt-3">
-      <PledgorsFilters
-        period={filters.period}
-        searchFio={filters.searchFio}
-        searchPowerOfAttorney={filters.searchPowerOfAttorney}
-        onPeriodChange={(value) => debouncedSetFilters({ period: value })}
-        onSearchFioChange={(value) => debouncedSetFilters({ searchFio: value })}
-        onSearchPowerOfAttorneyChange={(value) =>
-          debouncedSetFilters({ searchPowerOfAttorney: value })
-        }
-      />
+      <div className="flex items-center justify-between bg-white/70 pr-5 mb-5 p-5 rounded-[5px]">
+        <PledgorsFilters
+          period={filters.period}
+          searchFio={filters.searchFio}
+          searchPowerOfAttorney={filters.searchPowerOfAttorney}
+          onPeriodChange={(value) => debouncedSetFilters({ period: value })}
+          onSearchFioChange={(value) =>
+            debouncedSetFilters({ searchFio: value })
+          }
+          onSearchPowerOfAttorneyChange={(value) =>
+            debouncedSetFilters({ searchPowerOfAttorney: value })
+          }
+        />
+        <PledgorsHeader />
+      </div>
       {isLoading ? (
         <div className="p-6 text-gray-600">Загрузка...</div>
       ) : pledgors.length === 0 ? (

@@ -1,3 +1,4 @@
+// src/features/Pledgors/model/store.ts
 import { create } from "zustand";
 import { Pledgor, PledgorsFilter } from "../types";
 import { fetchPledgorsArray } from "../api/pledgorsApi";
@@ -19,10 +20,8 @@ type PledgorsState = {
 export const usePledgorsStore = create<PledgorsState>((set, get) => {
   const applyFiltersAndPagination = () => {
     const { allPledgors, filters, currentPage, itemsPerPage } = get();
-    console.log("allPledgors в applyFiltersAndPagination:", allPledgors);
     let filteredPledgors = allPledgors;
 
-    // Убедимся, что filteredPledgors не содержит дубликатов
     filteredPledgors = Array.from(
       new Map(
         filteredPledgors.map((pledgor) => {
@@ -39,7 +38,12 @@ export const usePledgorsStore = create<PledgorsState>((set, get) => {
     }
     if (filters.searchPowerOfAttorney) {
       filteredPledgors = filteredPledgors.filter((pledgor) =>
-        pledgor.powerOfAttorney.includes(filters.searchPowerOfAttorney)
+        pledgor.powerOfAttorney?.includes(filters.searchPowerOfAttorney)
+      );
+    }
+    if (filters.type && filters.type !== "all") {
+      filteredPledgors = filteredPledgors.filter(
+        (pledgor) => pledgor.type === filters.type
       );
     }
     if (filters.period && filters.period !== "all") {
@@ -55,7 +59,6 @@ export const usePledgorsStore = create<PledgorsState>((set, get) => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedPledgors = filteredPledgors.slice(start, end);
-    console.log("paginatedPledgors:", paginatedPledgors);
     set({ pledgors: paginatedPledgors, total: filteredPledgors.length });
   };
 
@@ -69,6 +72,7 @@ export const usePledgorsStore = create<PledgorsState>((set, get) => {
       period: "last7days",
       searchFio: "",
       searchPowerOfAttorney: "",
+      type: "all",
     },
     isLoading: false,
     error: null,
@@ -87,11 +91,9 @@ export const usePledgorsStore = create<PledgorsState>((set, get) => {
     },
 
     fetchPledgors: async () => {
-      console.log("Вызов fetchPledgors");
       set({ isLoading: true, error: null });
       try {
         const allPledgors = await fetchPledgorsArray();
-        console.log("allPledgors в fetchPledgors:", allPledgors);
         set({ allPledgors });
         applyFiltersAndPagination();
       } catch (error) {

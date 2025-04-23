@@ -1,4 +1,4 @@
-export type Pledgor = {
+export type Pledgee = {
   id: number;
   type: "individual" | "legal";
   name: string;
@@ -10,7 +10,7 @@ export type Pledgor = {
   inn: string;
 };
 
-export type PledgorRaw = {
+export type PledgeeRaw = {
   id: number;
   last_name: string;
   first_name: string;
@@ -40,16 +40,15 @@ export type PledgorRaw = {
   user_permissions: number[];
 };
 
-export type PledgorsFilter = {
+export type PledgeesFilter = {
   period: string;
   searchFio: string;
-  searchPowerOfAttorney: string;
   type: "all" | "individual" | "legal";
 };
 
-export const mapPledgor = (raw: PledgorRaw): Pledgor => ({
+export const mapPledgee = (raw: PledgeeRaw): Pledgee => ({
   id: raw.id,
-  type: raw.bank_branch ? "legal" : "individual", // Предполагаем, что bank_branch указывает на юр. лицо
+  type: raw.bank_branch ? "legal" : "individual",
   name:
     `${raw.last_name || ""} ${raw.first_name || ""} ${
       raw.middle_name || ""

@@ -1,3 +1,11 @@
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "../../../shared/ui/pagination";
+
 type BorrowersPaginationProps = {
   currentPage: number;
   totalItems: number;
@@ -32,20 +40,35 @@ export function BorrowersPagination({
       <span className="text-sm text-gray-600 mr-4">
         {startItem}–{endItem} из {totalItems}
       </span>
-      <button
-        onClick={handlePrevious}
-        disabled={currentPage === 1}
-        className="px-4 py-2 text-sm text-gray-600 disabled:opacity-50"
-      >
-        Назад
-      </button>
-      <button
-        onClick={handleNext}
-        disabled={currentPage === totalPages}
-        className="px-4 py-2 text-sm text-blue-600 disabled:opacity-50"
-      >
-        Вперёд
-      </button>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={handlePrevious}
+              className={
+                currentPage === 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <span className="px-3 py-1 text-sm">
+              Страница {currentPage} из {totalPages}
+            </span>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              onClick={handleNext}
+              className={
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import axios from "axios";
 import {
   Borrower,
-  IndividualBorrowerRaw,
-  LegalEntityBorrowerRaw,
   mapIndividualBorrower,
   mapLegalEntityBorrower,
 } from "../model/types/types";
@@ -13,19 +11,56 @@ const LEGAL_ENTITY_API_URL =
 
 export const fetchBorrowersArray = async (): Promise<Borrower[]> => {
   try {
-    const individualResponse = await axios.get<IndividualBorrowerRaw[]>(
-      INDIVIDUAL_API_URL
-    );
-    const individualBorrowers = individualResponse.data.map(
-      mapIndividualBorrower
-    );
+    let individualBorrowers: Borrower[] = [];
+    try {
+      const individualResponse = await axios.get(INDIVIDUAL_API_URL);
+      const responseData = individualResponse.data;
 
-    const legalEntityResponse = await axios.get<LegalEntityBorrowerRaw[]>(
-      LEGAL_ENTITY_API_URL
-    );
-    const legalEntityBorrowers = legalEntityResponse.data.map(
-      mapLegalEntityBorrower
-    );
+      console.log("Individual Borrowers Response:", responseData);
+      console.log("Is results an array?", Array.isArray(responseData?.results));
+
+      if (
+        responseData &&
+        typeof responseData === "object" &&
+        Array.isArray(responseData.results)
+      ) {
+        individualBorrowers = responseData.results.map(mapIndividualBorrower);
+      } else {
+        console.error(
+          "Individual Borrowers: Ожидался массив в results, получено:",
+          responseData
+        );
+      }
+    } catch (error) {
+      console.error("Ошибка при запросе к /api/individual_borrowers/:", error);
+    }
+
+    let legalEntityBorrowers: Borrower[] = [];
+    try {
+      const legalEntityResponse = await axios.get(LEGAL_ENTITY_API_URL);
+      const responseData = legalEntityResponse.data;
+
+      console.log("Legal Entity Borrowers Response:", responseData);
+      console.log("Is results an array?", Array.isArray(responseData?.results));
+
+      if (
+        responseData &&
+        typeof responseData === "object" &&
+        Array.isArray(responseData.results)
+      ) {
+        legalEntityBorrowers = responseData.results.map(mapLegalEntityBorrower);
+      } else {
+        console.error(
+          "Legal Entity Borrowers: Ожидался массив в results, получено:",
+          responseData
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Ошибка при запросе к /api/legal_entity_borrowers/:",
+        error
+      );
+    }
 
     const allBorrowers = [...individualBorrowers, ...legalEntityBorrowers];
 
@@ -35,7 +70,7 @@ export const fetchBorrowersArray = async (): Promise<Borrower[]> => {
 
     return uniqueBorrowers;
   } catch (error) {
-    console.error("Ошибка при получении заёмщиков:", error);
+    console.error("Общая ошибка при получении заёмщиков:", error);
     return [];
   }
 };

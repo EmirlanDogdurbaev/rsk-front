@@ -4,6 +4,7 @@ import { Layout } from "./Layout";
 import CollateralCreate from "../pages/CollateralCreate/ui";
 import PledgorsPage from "../pages/PledgorsPage";
 import { Pledgees } from "../features/Pledgees/ui/Pledgees";
+import { Borrowers } from "../pages/Borrowers/Borrowers";
 
 function App() {
   const isAuth = true;
@@ -13,6 +14,8 @@ function App() {
       <Routes>
         <Route path="/directory/pledgors" element={<PledgorsPage />} />
         <Route path="/pledgors" element={<Pledgees />} />
+        <Route path="/borrowers" element={<Borrowers />} />
+
         <Route path="/collateral/" element={<CollateralCreate />} />
       </Routes>
     </Layout>

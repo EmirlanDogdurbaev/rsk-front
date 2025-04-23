@@ -1,3 +1,11 @@
+import {
+  Table as ShadcnTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../shared/ui/table";
 import { TableProps } from "./types/types";
 
 export function Table<T>({ data, columns, minRows = 8 }: TableProps<T>) {
@@ -10,37 +18,37 @@ export function Table<T>({ data, columns, minRows = 8 }: TableProps<T>) {
 
   return (
     <div className="bg-white/50 rounded-lg shadow overflow-x-auto">
-      <table className="w-full table-fixed">
-        <thead>
-          <tr className="bg-gray-50">
+      <ShadcnTable>
+        <TableHeader>
+          <TableRow className="bg-gray-50">
             {columns.map((column) => (
-              <th
+              <TableHead
                 key={column.key}
                 className={`${column.width} px-6 py-4 text-left text-sm font-medium text-gray-600 truncate`}
               >
                 {column.header}
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {tableRows.map((item, index) => (
-            <tr
+            <TableRow
               key={item ? `row-${(item as any).id}-${index}` : `empty-${index}`}
               className="border-t border-black/10 min-h-[60px]"
             >
               {columns.map((column) => (
-                <td
+                <TableCell
                   key={column.key}
                   className={`${column.width} px-6 py-4 text-sm text-gray-900 truncate align-middle`}
                 >
                   {item ? column.render(item, index) : "\u00A0"}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </ShadcnTable>
     </div>
   );
 }

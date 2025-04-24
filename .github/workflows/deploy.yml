@@ -1,0 +1,34 @@
+name: Deploy to Google Cloud VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+          echo "SSH setup completed"
+          ls -la ~/.ssh
+
+      - name: Deploy to VM
+        run: |
+          ssh -vvv ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} << 'EOF'
+            echo "Connected to VM"
+            cd /home/jigit38/rsk-front
+            git pull origin main
+            bun i 
+            bun run build
+            sudo systemctl restart nginx
+          EOF

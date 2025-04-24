@@ -9,7 +9,8 @@ import { BorrowersTable } from "../../features/Borrowers/ui/BorrowersTable";
 
 export function Borrowers() {
   const {
-    borrowers,
+    borrowers, // Use filtered and paginated borrowers
+    allBorrowers,
     total,
     currentPage,
     itemsPerPage,
@@ -25,11 +26,15 @@ export function Borrowers() {
     fetchBorrowers();
   }, [fetchBorrowers]);
 
+  console.log("All borrowers:", allBorrowers);
+  console.log("Filtered borrowers:", borrowers);
+
   const debouncedSetFilters = useMemo(
     () =>
       debounce((newFilters: Partial<BorrowersFilter>) => {
+        console.log("Applying filters:", newFilters);
         setFilters(newFilters);
-      }, 150),
+      }, 10),
     [setFilters]
   );
 
@@ -58,8 +63,9 @@ export function Borrowers() {
         <div className="p-6 text-gray-600">Загрузка...</div>
       ) : (
         <>
-          <BorrowersTable borrowers={borrowers} />
-          {borrowers.length > 0 && (
+          <BorrowersTable borrowers={borrowers} />{" "}
+          {/* Use borrowers instead of allBorrowers */}
+          {borrowers.length > 0 && ( // Use borrowers.length for pagination
             <BorrowersPagination
               currentPage={currentPage}
               totalItems={total}

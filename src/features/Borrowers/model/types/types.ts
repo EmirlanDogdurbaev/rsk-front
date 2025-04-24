@@ -4,28 +4,28 @@ export type Borrower = {
   name: string;
   inn: string;
   phone?: string;
-  date_joined: string;
+  date_joined?: string;
 };
 
 export type IndividualBorrowerRaw = {
   id: number;
-  with_passport_photo_url?: string;
-  authorized_person_full_name: string;
-  person_inn: string;
+  family_doc_url?: string | null;
+  with_passport_photo_url?: string | null;
+  full_name: string;
+  inn: string;
   birth_date: string;
   passport_series: string;
   passport_number: string;
   passport_issued_by: string;
   passport_issue_date: string;
-  position: string;
-  person_document: string;
-  with_passport_photo?: string;
-  date_joined: string;
+  marital_status?: string;
+  family_doc?: string | null;
+  with_passport_photo?: string | null;
 };
 
 export type LegalEntityBorrowerRaw = {
   id: number;
-  with_passport_photo_url?: string;
+  with_passport_photo_url?: string | null;
   company_name: string;
   company_inn: string;
   founding_document: string;
@@ -39,8 +39,8 @@ export type LegalEntityBorrowerRaw = {
   passport_issue_date: string;
   position: string;
   person_document: string;
-  with_passport_photo?: string;
-  date_joined: string;
+  with_passport_photo?: string | null;
+  date_joined?: string; 
 };
 
 export type BorrowersFilter = {
@@ -54,10 +54,10 @@ export const mapIndividualBorrower = (
 ): Borrower => ({
   id: raw.id,
   type: "individual",
-  name: raw.authorized_person_full_name,
-  inn: raw.person_inn,
+  name: raw.full_name,
+  inn: raw.inn,
   phone: "-",
-  date_joined: raw.date_joined,
+  date_joined: undefined,
 });
 
 export const mapLegalEntityBorrower = (

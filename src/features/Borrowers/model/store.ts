@@ -21,15 +21,14 @@ export const useBorrowersStore = create<BorrowersState>((set, get) => {
     const { allBorrowers, filters, currentPage, itemsPerPage } = get();
     let filteredBorrowers = allBorrowers;
 
-    filteredBorrowers = Array.from(
-      new Map(
-        filteredBorrowers.map((borrower) => [borrower.id, borrower])
-      ).values()
-    );
+    console.log("Applying filters:", filters);
+    console.log("Before filtering:", filteredBorrowers);
 
     if (filters.searchFio) {
       filteredBorrowers = filteredBorrowers.filter((borrower) =>
-        borrower.name.toLowerCase().includes(filters.searchFio.toLowerCase())
+        borrower.name
+          .toLowerCase()
+          .includes(filters.searchFio.toLowerCase().trim())
       );
     }
     if (filters.type && filters.type !== "all") {
@@ -42,14 +41,18 @@ export const useBorrowersStore = create<BorrowersState>((set, get) => {
       const days = filters.period === "last7days" ? 7 : 30;
       const threshold = new Date(now.setDate(now.getDate() - days));
       filteredBorrowers = filteredBorrowers.filter((borrower) => {
-        if (!borrower.date_joined) return false;
+        if (!borrower.date_joined) return true; // Include if date_joined is undefined
         const dateJoined = new Date(borrower.date_joined);
         return dateJoined >= threshold;
       });
     }
+
+    console.log("After filtering:", filteredBorrowers);
+
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedBorrowers = filteredBorrowers.slice(start, end);
+    console.log("Paginated borrowers:", paginatedBorrowers);
     set({ borrowers: paginatedBorrowers, total: filteredBorrowers.length });
   };
 
@@ -87,7 +90,9 @@ export const useBorrowersStore = create<BorrowersState>((set, get) => {
         set({ allBorrowers });
         applyFiltersAndPagination();
       } catch (error) {
-        set({ error: "Ошибка при загрузке данных" });
+        const errorMessage =
+          error instanceof Error ? error.message : "Ошибка при загрузке данных";
+        set({ error: errorMessage });
       } finally {
         set({ isLoading: false });
       }

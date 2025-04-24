@@ -1,4 +1,3 @@
-// src/features/Pledgors/model/store.ts
 import { create } from "zustand";
 import { Pledgor, PledgorsFilter } from "../types";
 import { fetchPledgorsArray } from "../api/pledgorsApi";

@@ -1,76 +1,92 @@
-import axios from "axios";
 import {
   Borrower,
+  IndividualBorrowerRaw,
+  LegalEntityBorrowerRaw,
   mapIndividualBorrower,
   mapLegalEntityBorrower,
 } from "../model/types/types";
+import { $api } from "../../../shared/api/axiosInstance";
+import axios from "axios";
 
-const INDIVIDUAL_API_URL = "http://127.0.0.1:8000/api/individual_borrowers/";
-const LEGAL_ENTITY_API_URL =
-  "http://127.0.0.1:8000/api/legal_entity_borrowers/";
+const INDIVIDUAL_API_URL = `/api/individual_borrowers/`;
+const LEGAL_ENTITY_API_URL = `/api/legal_entity_borrowers/`;
+
+interface ApiResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
 
 export const fetchBorrowersArray = async (): Promise<Borrower[]> => {
   try {
-    let individualBorrowers: Borrower[] = [];
-    try {
-      const individualResponse = await axios.get(INDIVIDUAL_API_URL);
-      const responseData = individualResponse.data;
+    const [individualResponse, legalEntityResponse] = await Promise.all([
+      $api
+        .get<ApiResponse<IndividualBorrowerRaw>>(INDIVIDUAL_API_URL)
+        .catch((error) => {
+          console.error("Error fetching individual borrowers:", error);
+          return {
+            data: { count: 0, next: null, previous: null, results: [] },
+          };
+        }),
+      $api
+        .get<ApiResponse<LegalEntityBorrowerRaw>>(LEGAL_ENTITY_API_URL)
+        .catch((error) => {
+          console.error("Error fetching legal entity borrowers:", error);
+          return {
+            data: { count: 0, next: null, previous: null, results: [] },
+          };
+        }),
+    ]);
 
-      console.log("Individual Borrowers Response:", responseData);
-      console.log("Is results an array?", Array.isArray(responseData?.results));
+    const individualRawBorrowers = individualResponse.data.results;
+    const legalEntityRawBorrowers = legalEntityResponse.data.results;
 
-      if (
-        responseData &&
-        typeof responseData === "object" &&
-        Array.isArray(responseData.results)
-      ) {
-        individualBorrowers = responseData.results.map(mapIndividualBorrower);
-      } else {
-        console.error(
-          "Individual Borrowers: Ожидался массив в results, получено:",
-          responseData
-        );
-      }
-    } catch (error) {
-      console.error("Ошибка при запросе к /api/individual_borrowers/:", error);
-    }
+    console.log("Individual raw borrowers:", individualRawBorrowers);
+    console.log("Legal entity raw borrowers:", legalEntityRawBorrowers);
 
-    let legalEntityBorrowers: Borrower[] = [];
-    try {
-      const legalEntityResponse = await axios.get(LEGAL_ENTITY_API_URL);
-      const responseData = legalEntityResponse.data;
-
-      console.log("Legal Entity Borrowers Response:", responseData);
-      console.log("Is results an array?", Array.isArray(responseData?.results));
-
-      if (
-        responseData &&
-        typeof responseData === "object" &&
-        Array.isArray(responseData.results)
-      ) {
-        legalEntityBorrowers = responseData.results.map(mapLegalEntityBorrower);
-      } else {
-        console.error(
-          "Legal Entity Borrowers: Ожидался массив в results, получено:",
-          responseData
-        );
-      }
-    } catch (error) {
-      console.error(
-        "Ошибка при запросе к /api/legal_entity_borrowers/:",
-        error
-      );
-    }
-
-    const allBorrowers = [...individualBorrowers, ...legalEntityBorrowers];
-
-    const uniqueBorrowers = Array.from(
-      new Map(allBorrowers.map((borrower) => [borrower.id, borrower])).values()
+    const individualBorrowers = individualRawBorrowers.map(
+      mapIndividualBorrower
     );
+    const legalEntityBorrowers = legalEntityRawBorrowers.map(
+      mapLegalEntityBorrower
+    );
+
+    console.log("Mapped individual borrowers:", individualBorrowers);
+    console.log("Mapped legal entity borrowers:", legalEntityBorrowers);
+
+    const combinedBorrowers = [...individualBorrowers, ...legalEntityBorrowers];
+
+    console.log("Combined borrowers:", combinedBorrowers);
+
+    // Remove duplicates by id and type
+    const uniqueBorrowersById = Array.from(
+      new Map(
+        combinedBorrowers.map((item) => [`${item.id}-${item.type}`, item])
+      ).values()
+    );
+
+    console.log("Unique borrowers by id:", uniqueBorrowersById);
+
+    // Remove duplicates by name and inn
+    const uniqueBorrowers = Array.from(
+      new Map(
+        uniqueBorrowersById.map((borrower) => {
+          const key = `${borrower.name}|${borrower.inn}`;
+          return [key, borrower];
+        })
+      ).values()
+    );
+
+    console.log("Unique borrowers:", uniqueBorrowers);
 
     return uniqueBorrowers;
   } catch (error) {
-    console.error("Общая ошибка при получении заёмщиков:", error);
-    return [];
+    console.error("Ошибка при получении заемщиков:", error);
+    throw new Error(
+      axios.isAxiosError(error)
+        ? error.response?.data?.message || "Не удалось загрузить заемщиков"
+        : "Неизвестная ошибка"
+    );
   }
 };

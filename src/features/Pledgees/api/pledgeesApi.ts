@@ -1,7 +1,8 @@
 import axios from "axios";
 import { mapPledgee, Pledgee, PledgeeRaw } from "../model/types/types";
+import { $api } from "../../../shared/api/axiosInstance";
 
-const API_URL = "http://127.0.0.1:8000/api/pledgees/";
+const API_URL = `${$api}/api/pledgees/`;
 
 export const fetchPledgeesArray = async (): Promise<Pledgee[]> => {
   try {

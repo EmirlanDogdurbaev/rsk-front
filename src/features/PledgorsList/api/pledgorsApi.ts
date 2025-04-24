@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Pledgor, PledgorRaw, mapPledgor } from "../types";
+import { $api } from "../../../shared/api/axiosInstance";
 
-const API_URL = "http://127.0.0.1:8000/api/auth/users/";
+const API_URL = `${$api}/auth/users/`;
 
 export const fetchPledgorsArray = async (): Promise<Pledgor[]> => {
   try {

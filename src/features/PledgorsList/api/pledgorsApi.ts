@@ -1,18 +1,15 @@
-import axios from "axios";
 import { Pledgor, PledgorRaw, mapPledgor } from "../types";
 import { $api } from "../../../shared/api/axiosInstance";
 
-const API_URL = `${$api}/auth/users/`;
-
 export const fetchPledgorsArray = async (): Promise<Pledgor[]> => {
   try {
-    const response = await axios.get<PledgorRaw[]>(API_URL);
+    const response = await $api.get<PledgorRaw[]>("/api/auth/users/");
 
-    const uniqueRawPledgorsById = Array.from(
+    const uniqueRawPledgors = Array.from(
       new Map(response.data.map((item) => [item.id, item])).values()
     );
 
-    let pledgors = uniqueRawPledgorsById.map(mapPledgor);
+    const pledgors = uniqueRawPledgors.map(mapPledgor);
 
     const uniquePledgors = Array.from(
       new Map(
@@ -25,7 +22,10 @@ export const fetchPledgorsArray = async (): Promise<Pledgor[]> => {
 
     return uniquePledgors;
   } catch (error) {
-    console.error("Ошибка при получении залогодателей:", error);
+    console.error("Ошибка при получении залогодателей:", {
+      message: error instanceof Error ? error.message : "Неизвестная ошибка",
+      error,
+    });
     return [];
   }
 };

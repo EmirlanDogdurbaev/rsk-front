@@ -2,9 +2,10 @@ import React from "react";
 import Header from "../widgets/header/Header";
 import { Sidebar } from "../widgets/sidebar/ui/Sidebar";
 import bg from "../shared/assets/bg.png";
+import { Outlet } from "react-router-dom";
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -26,7 +27,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Sidebar />
         </aside>
 
-        <main className="flex-1 overflow-auto p-2">{children}</main>
+        <main className="flex-1 overflow-auto p-2">
+          <Outlet />
+          {children}
+        </main>
       </div>
     </div>
   );

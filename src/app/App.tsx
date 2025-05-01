@@ -1,24 +1,39 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "../features/auth/model/store";
 import { LoginForm } from "../features/auth/ui/LoginForm";
-import { Layout } from "./Layout";
-import CollateralCreate from "../pages/CollateralCreate/ui";
+import { ChangePasswordForm } from "../features/auth/ui/ChangePasswordForm";
 import PledgorsPage from "../pages/PledgorsPage";
 import { Pledgees } from "../features/Pledgees/ui/Pledgees";
+import CollateralCreate from "../pages/CollateralCreate/ui";
 import { Borrowers } from "../pages/Borrowers/Borrowers";
+import { Layout } from "./Layout";
 
 function App() {
-  const isAuth = true;
-  if (!isAuth) return <LoginForm />;
-  return (
-    <Layout>
+  const { accessToken } = useAuthStore();
+
+  if (!accessToken) {
+    return (
       <Routes>
-        <Route path="/directory/pledgors" element={<PledgorsPage />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route path="/change-password" element={<ChangePasswordForm />} />
+      <Route element={<Layout />}>
         <Route path="/pledgors" element={<Pledgees />} />
         <Route path="/borrowers" element={<Borrowers />} />
-
-        <Route path="/collateral/" element={<CollateralCreate />} />
-      </Routes>
-    </Layout>
+        <Route path="/collateral" element={<CollateralCreate />} />
+        <Route path="/directory/pledgors" element={<PledgorsPage />} />
+        <Route
+          path="*"
+          element={<Navigate to="/directory/pledgors" replace />}
+        />
+      </Route>
+    </Routes>
   );
 }
 

@@ -1,14 +1,21 @@
 import { $api } from "../../../shared/api/axiosInstance";
 
 export interface LoginDto {
-  email: string;
+  username: string;
   password: string;
 }
 
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+  username: string;
+  is_first_login: boolean;
+}
+
 export const login = async ({
-  email,
+  username,
   password,
-}: LoginDto): Promise<{ token: string }> => {
-  const res = await $api.post("/auth/login", { email, password });
+}: LoginDto): Promise<LoginResponse> => {
+  const res = await $api.post("/api/auth/login/", { username, password });
   return res.data;
 };

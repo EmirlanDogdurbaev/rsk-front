@@ -1,4 +1,5 @@
 import { Table } from "../../../shared/components/Table/Table";
+import { Button } from "../../../shared/ui";
 import { ApprovalHistory } from "../model/types";
 
 type CadastralHistoryTableProps = {
@@ -66,9 +67,12 @@ export function CadastralHistoryTable({ history }: CadastralHistoryTableProps) {
             statusClass = "text-gray-600";
         }
         return (
-          <span className={`px-2 py-1 rounded ${statusClass}`}>
+          <Button
+            variant={"secondary"}
+            className={`px-2 py-1 rounded ${statusClass} w-full`}
+          >
             {item.status || "-"}
-          </span>
+          </Button>
         );
       },
     },

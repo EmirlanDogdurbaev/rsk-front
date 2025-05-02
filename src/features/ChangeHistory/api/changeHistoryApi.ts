@@ -1,19 +1,19 @@
 import { $api } from "../../../shared/api/axiosInstance";
 import {
-  CadastralHistoryRaw,
-  CadastralHistory,
-  mapCadastralHistory,
+   ChangeHistoryRaw,
+   ChangeHistory,
+  mapChangeHistory,
 } from "../model/types";
 
-const CADASTRAL_HISTORY_URL = "/api/api/history/";
+const  Change_HISTORY_URL = "/api/api/history/";
 
-export const fetchCadastralHistory = async (): Promise<CadastralHistory[]> => {
+export const fetchChangeHistory = async (): Promise< ChangeHistory[]> => {
   try {
-    const response = await $api.get<{ results: CadastralHistoryRaw[] }>(
-      CADASTRAL_HISTORY_URL
+    const response = await $api.get<{ results:  ChangeHistoryRaw[] }>(
+       Change_HISTORY_URL
     );
     const historyItems = Array.isArray(response.data.results)
-      ? response.data.results.map(mapCadastralHistory)
+      ? response.data.results.map(mapChangeHistory)
       : [];
     return historyItems;
   } catch (error) {

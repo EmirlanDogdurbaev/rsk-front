@@ -1,22 +1,22 @@
 import { create } from "zustand";
-import { fetchCadastralHistory } from "../api/cadastralHistoryApi";
-import { CadastralHistory, CadastralHistoryFilter } from "../model/types";
+import { ChangeHistory, ChangeHistoryFilter } from "./types";
+import { fetchChangeHistory } from "../api/changeHistoryApi";
 
-type CadastralHistoryState = {
-  history: CadastralHistory[];
-  allHistory: CadastralHistory[];
+type ChangelHistoryState = {
+  history: ChangeHistory[];
+  allHistory: ChangeHistory[];
   total: number;
   currentPage: number;
   itemsPerPage: number;
-  filters: CadastralHistoryFilter;
+  filters: ChangeHistoryFilter;
   isLoading: boolean;
   error: string | null;
   setCurrentPage: (page: number) => void;
-  setFilters: (newFilters: Partial<CadastralHistoryFilter>) => void;
+  setFilters: (newFilters: Partial<ChangeHistoryFilter>) => void;
   fetchHistory: () => Promise<void>;
 };
 
-export const useCadastralHistoryStore = create<CadastralHistoryState>(
+export const useChangeHistoryStore = create<ChangelHistoryState>(
   (set, get) => {
     const applyFiltersAndPagination = () => {
       const { allHistory, filters, currentPage, itemsPerPage } = get();
@@ -68,7 +68,7 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
         applyFiltersAndPagination();
       },
 
-      setFilters: (newFilters: Partial<CadastralHistoryFilter>) => {
+      setFilters: (newFilters: Partial<ChangeHistoryFilter>) => {
         set((state) => ({
           filters: { ...state.filters, ...newFilters },
           currentPage: 1,
@@ -79,7 +79,7 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
       fetchHistory: async () => {
         set({ isLoading: true, error: null });
         try {
-          const allHistory = await fetchCadastralHistory();
+          const allHistory = await fetchChangeHistory();
           set({ allHistory });
           applyFiltersAndPagination();
         } catch (error) {

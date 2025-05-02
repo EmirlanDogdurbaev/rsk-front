@@ -1,4 +1,4 @@
-export interface CadastralHistoryRaw {
+export interface ChangeHistoryRaw {
   id: number;
   table_name: string;
   field_name: string;
@@ -9,7 +9,7 @@ export interface CadastralHistoryRaw {
   object_id: string;
 }
 
-export interface CadastralHistory {
+export interface ChangeHistory {
   id: number;
   table_name: string;
   field_name: string;
@@ -20,16 +20,16 @@ export interface CadastralHistory {
   object_id: string;
 }
 
-export type CadastralHistoryFilter = {
+export type ChangeHistoryFilter = {
   search: string;
   period: string;
 };
 
 
 
-export const mapCadastralHistory = (
-  raw: CadastralHistoryRaw
-): CadastralHistory => ({
+export const mapChangeHistory = (
+  raw: ChangeHistoryRaw
+): ChangeHistory => ({
   id: raw.id,
   table_name: raw.table_name || "-",
   field_name: raw.field_name || "-",

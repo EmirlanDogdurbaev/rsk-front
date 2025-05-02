@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useCadastralHistoryStore } from "../model/store";
-import { CadastralHistoryHeader } from "./CadastralHistoryHeader";
-import { CadastralHistoryTable } from "./CadastralHistoryTable";
-import { CadastralHistoryPagination } from "./CadastralHistoryPagination";
+import { useChangeHistoryStore } from "../model/store";
+import { ChangeHistoryHeader } from "./ChangeHistoryHeader";
+import { ChangeHistoryTable } from "./ChangeHistoryTable";
+import { ChangeHistoryPagination } from "./ChangeHistoryPagination";
 
-export function CadastralHistory() {
+export function ChangeHistory() {
   const {
     history,
     total,
@@ -13,7 +13,7 @@ export function CadastralHistory() {
     isLoading,
     setCurrentPage,
     fetchHistory,
-  } = useCadastralHistoryStore();
+  } = useChangeHistoryStore();
 
   useEffect(() => {
     fetchHistory();
@@ -21,14 +21,14 @@ export function CadastralHistory() {
 
   return (
     <div className="p-6">
-      <CadastralHistoryHeader />
+      <ChangeHistoryHeader />
       {isLoading ? (
         <div className="p-6 text-gray-600">Загрузка...</div>
       ) : (
         <>
-          <CadastralHistoryTable history={history} />
+          <ChangeHistoryTable history={history} />
           {history.length > 0 && (
-            <CadastralHistoryPagination
+            <ChangeHistoryPagination
               currentPage={currentPage}
               totalItems={total}
               itemsPerPage={itemsPerPage}

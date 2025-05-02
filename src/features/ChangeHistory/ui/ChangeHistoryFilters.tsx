@@ -7,19 +7,19 @@ import {
   SelectValue,
 } from "../../../shared/ui/select";
 
-interface CadastralHistoryFiltersProps {
+interface ChangeHistoryFiltersProps {
   search: string;
   period: string;
   onSearchChange: (value: string) => void;
   onPeriodChange: (value: string) => void;
 }
 
-export const CadastralHistoryFilters = ({
+export const ChangeHistoryFilters = ({
   search,
   period,
   onSearchChange,
   onPeriodChange,
-}: CadastralHistoryFiltersProps) => {
+}: ChangeHistoryFiltersProps) => {
   return (
     <div className="flex space-x-4 mb-4">
       <Input

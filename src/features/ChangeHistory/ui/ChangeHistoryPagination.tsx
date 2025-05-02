@@ -7,19 +7,19 @@ import {
   PaginationPrevious,
 } from "../../../shared/ui/pagination";
 
-interface CadastralHistoryPaginationProps {
+interface ChangeHistoryPaginationProps {
   currentPage: number;
   totalItems: number;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
 }
 
-export const CadastralHistoryPagination = ({
+export const ChangeHistoryPagination = ({
   currentPage,
   totalItems,
   itemsPerPage,
   onPageChange,
-}: CadastralHistoryPaginationProps) => {
+}: ChangeHistoryPaginationProps) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (

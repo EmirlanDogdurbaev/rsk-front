@@ -21,7 +21,7 @@ const Header = ({ username = "t.testov", onLogout }: IHeader) => {
       <div className="flex items-center space-x-3">
         <img src={Logo} alt="Bank Logo" className="h-10" />
         <h2 className="text-lg font-bold uppercase tracking-wide">
-          Система регистрации заемов
+          Система регистрации залогов
         </h2>
       </div>
       <div className="flex items-center space-x-4">

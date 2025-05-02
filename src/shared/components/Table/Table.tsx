@@ -24,7 +24,7 @@ export function Table<T>({ data, columns, minRows = 8 }: TableProps<T>) {
             {columns.map((column) => (
               <TableHead
                 key={column.key}
-                className={`${column.width} px-6 py-4 text-left text-sm font-medium text-gray-600 truncate`}
+                className={`${column.width} min-w-[${column.width}] max-w-[${column.width}] px-6 py-4 text-left text-sm font-medium text-gray-600 truncate`} // Фиксируем ширину заголовков
               >
                 {column.header}
               </TableHead>
@@ -40,7 +40,7 @@ export function Table<T>({ data, columns, minRows = 8 }: TableProps<T>) {
               {columns.map((column) => (
                 <TableCell
                   key={column.key}
-                  className={`${column.width} px-6 py-4 text-sm text-gray-900 truncate align-middle`}
+                  className={`${column.width} min-w-[${column.width}] max-w-[${column.width}] px-6 py-4 text-sm text-gray-900 whitespace-normal break-words align-middle`} 
                 >
                   {item ? column.render(item, index) : "\u00A0"}
                 </TableCell>

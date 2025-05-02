@@ -30,5 +30,5 @@ jobs:
             git pull origin main
             bun i 
             bun run build
-            sudo systemctl restart nginx
+            sudo systemctl reload nginx
           EOF

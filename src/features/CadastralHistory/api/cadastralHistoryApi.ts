@@ -7,8 +7,7 @@ import {
 } from "../model/types";
 
 const APPROVAL_HISTORY_URL = "/api/admin/cadastre/approval_history/";
-const COUNTERS_URL =
-  "http://35.224.163.23/api/admin/cadastre/approval_status_counts/";
+const COUNTERS_URL = "/api/admin/cadastre/approval_status_counts/";
 
 export const fetchCadastralHistory = async (): Promise<ApprovalHistory[]> => {
   try {

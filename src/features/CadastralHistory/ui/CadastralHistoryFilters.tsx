@@ -21,63 +21,49 @@ interface CadastralHistoryFiltersProps {
 }
 
 export const CadastralHistoryFilters = ({
-  branch,
   searchEnm,
   requestType,
   executor,
   period,
-  onBranchChange,
   onSearchEnmChange,
   onRequestTypeChange,
   onExecutorChange,
   onPeriodChange,
 }: CadastralHistoryFiltersProps) => {
   return (
-    <div className="flex space-x-4 mb-4">
-      <Select value={branch} onValueChange={onBranchChange}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Филиал/Район" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Все</SelectItem>
-          <SelectItem value="branch1">Филиал 1</SelectItem>
-          <SelectItem value="branch2">Филиал 2</SelectItem>
-        </SelectContent>
-      </Select>
-      <Input
-        placeholder="Поиск по коду ЕНМ"
-        value={searchEnm}
-        onChange={(e) => onSearchEnmChange(e.target.value)}
-        className="max-w-sm"
-      />
-      <Select value={requestType} onValueChange={onRequestTypeChange}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Вид запроса" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Все</SelectItem>
-          <SelectItem value="registration">Регистрация</SelectItem>
-          <SelectItem value="removal">Снятие</SelectItem>
-        </SelectContent>
-      </Select>
-      <Select value={executor} onValueChange={onExecutorChange}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Исполнитель" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Все</SelectItem>
-          <SelectItem value="executor1">Тест Тестов</SelectItem>
-          <SelectItem value="executor2">Иван Иванов</SelectItem>
-        </SelectContent>
-      </Select>
+    <div className="flex items-center space-x-2 p-6 bg-white border rounded-md mb-6">
       <Select value={period} onValueChange={onPeriodChange}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Период" />
+        <SelectTrigger className="min-w-[200px] text-sm text-gray-600 border-none focus:ring-0">
+          <SelectValue placeholder="Последние 7 дней" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Все время</SelectItem>
           <SelectItem value="last7days">Последние 7 дней</SelectItem>
           <SelectItem value="last30days">Последние 30 дней</SelectItem>
+        </SelectContent>
+      </Select>
+      <Input
+        placeholder="Поиск по коду ЕНИ"
+        value={searchEnm}
+        onChange={(e) => onSearchEnmChange(e.target.value)}
+        className="min-w-[200px] max-w-[250px] text-sm text-gray-600 border-none focus:ring-0"
+      />
+      <Select value={requestType} onValueChange={onRequestTypeChange}>
+        <SelectTrigger className="w-[200px] text-sm text-gray-600 border-none focus:ring-0">
+          <SelectValue placeholder="Вид запроса" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Вид запроса</SelectItem>
+          <SelectItem value="arrest">Наложение ареста/залога</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={executor} onValueChange={onExecutorChange}>
+        <SelectTrigger className="w-[200px] text-sm text-gray-600 border-none focus:ring-0">
+          <SelectValue placeholder="Исполнитель" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Исполнитель</SelectItem>
+          <SelectItem value="test test test">test test test</SelectItem>
         </SelectContent>
       </Select>
     </div>

@@ -14,7 +14,7 @@ export function CadastralHistoryTable({ history }: CadastralHistoryTableProps) {
       render: (_: ApprovalHistory, index: number) => index + 1,
     },
     {
-      header: "Код ЕНМ",
+      header: "Код ЕНИ",
       width: "w-[200px]",
       key: "contract_number",
       render: (item: ApprovalHistory) => item.contract_number || "-",
@@ -74,5 +74,5 @@ export function CadastralHistoryTable({ history }: CadastralHistoryTableProps) {
     },
   ];
 
-  return <Table data={history} columns={columns} minRows={10} />;
+  return <Table data={history} columns={columns} minRows={9} />;
 }

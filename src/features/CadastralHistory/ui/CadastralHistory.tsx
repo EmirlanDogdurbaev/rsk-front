@@ -29,7 +29,7 @@ export function CadastralHistory() {
     () =>
       debounce((newFilters: Partial<CadastralHistoryFilter>) => {
         setFilters(newFilters);
-      }, 150),
+      }, 10),
     [setFilters]
   );
 

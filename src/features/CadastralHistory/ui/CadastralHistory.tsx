@@ -5,7 +5,6 @@ import { CadastralHistoryFilters } from "./CadastralHistoryFilters";
 import { CadastralHistoryHeader } from "./CadastralHistoryHeader";
 import { CadastralHistoryTable } from "./CadastralHistoryTable";
 import { CadastralHistoryPagination } from "./CadastralHistoryPagination";
-import { CadastralHistoryFilter } from "../model/types";
 
 export function CadastralHistory() {
   const {
@@ -27,9 +26,19 @@ export function CadastralHistory() {
 
   const debouncedSetFilters = useMemo(
     () =>
-      debounce((newFilters: Partial<CadastralHistoryFilter>) => {
-        setFilters(newFilters);
-      }, 10),
+      debounce(
+        (
+          newFilters: Partial<{
+            searchEnm: string;
+            requestType: string;
+            executor: string;
+            period: string;
+          }>
+        ) => {
+          setFilters(newFilters);
+        },
+        150
+      ),
     [setFilters]
   );
 
@@ -43,16 +52,15 @@ export function CadastralHistory() {
     return <div className="p-6 text-red-600">Ошибка: {error}</div>;
   }
 
+
   return (
     <div className="p-6">
       <CadastralHistoryHeader />
       <CadastralHistoryFilters
-        branch={filters.branch}
         searchEnm={filters.searchEnm}
         requestType={filters.requestType}
         executor={filters.executor}
         period={filters.period}
-        onBranchChange={(value) => debouncedSetFilters({ branch: value })}
         onSearchEnmChange={(value) => debouncedSetFilters({ searchEnm: value })}
         onRequestTypeChange={(value) =>
           debouncedSetFilters({ requestType: value })

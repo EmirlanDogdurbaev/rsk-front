@@ -2,11 +2,13 @@ import { create } from "zustand";
 import {
   fetchCadastralHistory,
   fetchStatusCounters,
+  fetchFilterOptions,
 } from "../api/cadastralHistoryApi";
 import {
   ApprovalHistory,
   CadastralHistoryFilter,
   StatusCounters,
+  FilterOptions,
 } from "../model/types";
 
 type CadastralHistoryState = {
@@ -17,6 +19,7 @@ type CadastralHistoryState = {
   itemsPerPage: number;
   filters: CadastralHistoryFilter;
   statusCounters: StatusCounters;
+  filterOptions: FilterOptions;
   isLoading: boolean;
   error: string | null;
   setCurrentPage: (page: number) => void;
@@ -28,7 +31,7 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
   (set, get) => {
     const applyFiltersAndPagination = () => {
       const { allHistory, filters, currentPage, itemsPerPage } = get();
-      let filteredHistory = allHistory;
+      let filteredHistory = [...allHistory];
 
       if (filters.searchEnm) {
         filteredHistory = filteredHistory.filter((item) =>
@@ -45,19 +48,23 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
         );
       }
       if (filters.executor && filters.executor !== "all") {
-        filteredHistory = filteredHistory.filter(
-          (item) =>
-            item.requested_by_name.toLowerCase() ===
-            filters.executor.toLowerCase()
-        );
-      }
-      if (filters.branch && filters.branch !== "all") {
-        filteredHistory = filteredHistory.filter(
-          (item) =>
-            item.requested_by_name
-              .toLowerCase()
-              .includes(filters.branch.toLowerCase()) // Временная логика
-        );
+        filteredHistory = filteredHistory.filter((item) => {
+          return (
+            item.requested_by && String(item.requested_by) === filters.executor
+          );
+        });
+        if (
+          filteredHistory.length === 0 &&
+          allHistory.some((item) => item.requested_by_name)
+        ) {
+          filteredHistory = allHistory.filter(
+            (item) =>
+              item.requested_by_name &&
+              item.requested_by_name
+                .toLowerCase()
+                .includes(filters.executor.toLowerCase())
+          );
+        }
       }
       if (filters.period && filters.period !== "all") {
         const now = new Date();
@@ -82,7 +89,6 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
       currentPage: 1,
       itemsPerPage: 10,
       filters: {
-        branch: "all",
         searchEnm: "",
         requestType: "all",
         executor: "all",
@@ -94,6 +100,18 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
         removed: 0,
         rejected: 0,
         inProgress: 0,
+      },
+      filterOptions: {
+        requestTypes: [
+          { value: "all", label: "Все" },
+          { value: "arrest", label: "Наложение ареста/залога" },
+        ],
+        executors: [{ value: "all", label: "Все" }],
+        periods: [
+          { value: "all", label: "Все время" },
+          { value: "last7days", label: "Последние 7 дней" },
+          { value: "last30days", label: "Последние 30 дней" },
+        ],
       },
       isLoading: false,
       error: null,
@@ -114,14 +132,15 @@ export const useCadastralHistoryStore = create<CadastralHistoryState>(
       fetchHistory: async () => {
         set({ isLoading: true, error: null });
         try {
-          const [allHistory, counters] = await Promise.all([
+          const [allHistory, counters, filterOptions] = await Promise.all([
             fetchCadastralHistory(),
             fetchStatusCounters(),
+            fetchFilterOptions(),
           ]);
-          set({ allHistory, statusCounters: counters });
+          set({ allHistory, statusCounters: counters, filterOptions });
           applyFiltersAndPagination();
         } catch (error) {
-          set({ error: "Ошибка при загрузке истории изменений" });
+          set({ error: "Ошибка при загрузке данных" });
         } finally {
           set({ isLoading: false });
         }

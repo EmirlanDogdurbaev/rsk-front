@@ -18,13 +18,13 @@ export interface ApprovalHistory {
   contract_number: string;
   request_type: string;
   request_date: string;
+  requested_by: number | null; 
   requested_by_name: string;
   response_date: string;
   status: string;
 }
 
 export type CadastralHistoryFilter = {
-  branch: string;
   searchEnm: string;
   requestType: string;
   executor: string;
@@ -37,6 +37,17 @@ export interface StatusCounters {
   removed: number;
   rejected: number;
   inProgress: number;
+}
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface FilterOptions {
+  requestTypes: SelectOption[];
+  executors: SelectOption[];
+  periods: SelectOption[];
 }
 
 export interface Column<T> {
@@ -53,6 +64,7 @@ export const mapApprovalHistory = (
   contract_number: raw.contract_number || "-",
   request_type: raw.request_type_display || "-",
   request_date: raw.request_date || "-",
+  requested_by: raw.requested_by, 
   requested_by_name: raw.requested_by_name || "-",
   response_date: raw.response_date || "-",
   status: raw.status_display || "-",

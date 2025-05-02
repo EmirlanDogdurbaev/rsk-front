@@ -11,6 +11,7 @@ export const $api = axios.create({
   baseURL: "http://35.224.163.23",
   headers: {
     "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("accessToken"),
   },
 });
 

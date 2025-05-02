@@ -8,6 +8,7 @@ import CollateralCreate from "../pages/CollateralCreate/ui";
 import { Borrowers } from "../pages/Borrowers/Borrowers";
 import { Layout } from "./Layout";
 import { ChangeHistory } from "../features/ChangeHistory/ui/ChangeHistory";
+import { CadastralHistory } from "../features/CadastralHistory/ui/CadastralHistory";
 
 function App() {
   const { accessToken } = useAuthStore();
@@ -30,6 +31,7 @@ function App() {
         <Route path="/collateral" element={<CollateralCreate />} />
         <Route path="/directory/pledgors" element={<PledgorsPage />} />
         <Route path="/change-history" element={<ChangeHistory />} />
+        <Route path="/collateral-history" element={<CadastralHistory />} />
 
         <Route
           path="*"

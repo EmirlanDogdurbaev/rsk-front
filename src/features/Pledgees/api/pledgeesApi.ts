@@ -1,25 +1,30 @@
-import axios from "axios";
-import { mapPledgee, Pledgee, PledgeeRaw } from "../model/types/types";
 import { $api } from "../../../shared/api/axiosInstance";
+import {
+  IndividualPledgorRaw,
+  LegalEntityPledgorRaw,
+  Pledgee,
+  mapIndividualPledgor,
+  mapLegalEntityPledgor,
+} from "../model/types/types";
 
-const API_URL = `${$api}/api/pledgees/`;
+const INDIVIDUAL_PLEDGORS_URL = "/api/individual_pledgors/";
+const LEGAL_ENTITY_PLEDGORS_URL = "/api/legal_entity_pledgors/";
 
 export const fetchPledgeesArray = async (): Promise<Pledgee[]> => {
   try {
-    const response = await axios.get<PledgeeRaw[]>(API_URL);
-    const uniqueRawPledgeesById = Array.from(
-      new Map(response.data.map((item) => [item.id, item])).values()
-    );
-    let pledgees = uniqueRawPledgeesById.map(mapPledgee);
-    const uniquePledgees = Array.from(
-      new Map(
-        pledgees.map((pledgee) => {
-          const key = `${pledgee.name}|${pledgee.address}|${pledgee.phone}|${pledgee.powerOfAttorney}`;
-          return [key, pledgee];
-        })
-      ).values()
-    );
-    return uniquePledgees;
+    const [individualResponse, legalEntityResponse] = await Promise.all([
+      $api.get<{ results: IndividualPledgorRaw[] }>(INDIVIDUAL_PLEDGORS_URL),
+      $api.get<{ results: LegalEntityPledgorRaw[] }>(LEGAL_ENTITY_PLEDGORS_URL),
+    ]);
+
+    const individualPledgees = Array.isArray(individualResponse.data.results)
+      ? individualResponse.data.results.map(mapIndividualPledgor)
+      : [];
+    const legalEntityPledgees = Array.isArray(legalEntityResponse.data.results)
+      ? legalEntityResponse.data.results.map(mapLegalEntityPledgor)
+      : [];
+
+    return [...individualPledgees, ...legalEntityPledgees];
   } catch (error) {
     console.error("Ошибка при получении залогодержателей:", error);
     return [];

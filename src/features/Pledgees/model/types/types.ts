@@ -1,44 +1,47 @@
-export type Pledgee = {
+export interface IndividualPledgorRaw {
+  id: number;
+  family_doc_url: string | null;
+  with_passport_photo_url: string | null;
+  full_name: string;
+  inn: string;
+  birth_date: string;
+  passport_series: string;
+  passport_number: string;
+  passport_issued_by: string;
+  passport_issue_date: string;
+  marital_status: string;
+  family_doc: string | null;
+  with_passport_photo: string | null;
+}
+
+export interface LegalEntityPledgorRaw {
+  id: number;
+  with_passport_photo_url: string;
+  company_name: string;
+  company_inn: string;
+  founding_document: string;
+  registration_date: string;
+  authorized_person_full_name: string;
+  person_inn: string;
+  birth_date: string;
+  passport_series: string;
+  passport_number: string;
+  passport_issued_by: string;
+  passport_issue_date: string;
+  position: string;
+  person_document: string;
+  with_passport_photo: string;
+}
+
+export interface Pledgee {
   id: number;
   type: "individual" | "legal";
   name: string;
-  orgName: string;
-  address: string;
-  phone: string;
-  powerOfAttorney: string;
-  date_joined: string;
   inn: string;
-};
-
-export type PledgeeRaw = {
-  id: number;
-  last_name: string;
-  first_name: string;
-  middle_name: string | null;
-  registration_address: string | null;
-  phone: string | null;
-  proxy_number: string | null;
-  passport_photo: string | null;
-  proxy_photo: string | null;
-  pledger_photo: string | null;
-  inn: string | null;
-  birth_date: string | null;
-  passport_series: string | null;
-  passport_number: string | null;
-  passport_issued_by: string | null;
-  passport_issue_date: string | null;
-  proxy_date: string | null;
-  proxy_authority: string | null;
-  is_active: boolean;
-  is_staff: boolean;
-  is_superuser: boolean;
-  is_first_login: boolean;
-  date_joined: string;
-  last_login: string | null;
-  bank_branch: string | null;
-  groups: number[];
-  user_permissions: number[];
-};
+  birth_date: string;
+  passport: string;
+  registration_date: string;
+}
 
 export type PledgeesFilter = {
   period: string;
@@ -46,17 +49,24 @@ export type PledgeesFilter = {
   type: "all" | "individual" | "legal";
 };
 
-export const mapPledgee = (raw: PledgeeRaw): Pledgee => ({
+export const mapIndividualPledgor = (raw: IndividualPledgorRaw): Pledgee => ({
   id: raw.id,
-  type: raw.bank_branch ? "legal" : "individual",
-  name:
-    `${raw.last_name || ""} ${raw.first_name || ""} ${
-      raw.middle_name || ""
-    }`.trim() || "-",
-  orgName: raw.bank_branch || "-",
-  address: raw.registration_address || "-",
-  phone: raw.phone || "-",
-  powerOfAttorney: raw.proxy_number || "-",
-  date_joined: raw.date_joined,
+  type: "individual",
+  name: raw.full_name || "-",
   inn: raw.inn || "-",
+  birth_date: raw.birth_date || "-",
+  passport:
+    `${raw.passport_series || ""} ${raw.passport_number || ""}`.trim() || "-",
+  registration_date: "-", // У физлиц нет registration_date
+});
+
+export const mapLegalEntityPledgor = (raw: LegalEntityPledgorRaw): Pledgee => ({
+  id: raw.id,
+  type: "legal",
+  name: raw.authorized_person_full_name || raw.company_name || "-",
+  inn: raw.company_inn || raw.person_inn || "-",
+  birth_date: raw.birth_date || "-",
+  passport:
+    `${raw.passport_series || ""} ${raw.passport_number || ""}`.trim() || "-",
+  registration_date: raw.registration_date || "-",
 });

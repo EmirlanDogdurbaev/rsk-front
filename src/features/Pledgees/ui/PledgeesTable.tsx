@@ -21,7 +21,7 @@ export function PledgeesTable({ pledgees }: PledgeesTableProps) {
         pledgee.type === "individual" ? "Физ лицо" : "Юр лицо",
     },
     {
-      header: "Залогодержатель",
+      header: "Залогодатель",
       width: "w-1/4",
       key: "name",
       render: (pledgee: Pledgee, _: number) => pledgee.name || "-",
@@ -36,7 +36,7 @@ export function PledgeesTable({ pledgees }: PledgeesTableProps) {
       header: "Номер телефона",
       width: "w-1/4",
       key: "phone",
-      render: (pledgee: Pledgee, _: number) => pledgee.phone || "-",
+      render: (pledgee: Pledgee, _: number) => pledgee.registration_date || "-",
     },
   ];
 

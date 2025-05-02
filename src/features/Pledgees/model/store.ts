@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { fetchPledgeesArray } from "../api/pledgeesApi";
-import { Pledgee, PledgeesFilter } from "./types/types";
+import { Pledgee, PledgeesFilter } from "../model/types/types";
 
 type PledgeesState = {
   pledgees: Pledgee[];
@@ -21,15 +21,6 @@ export const usePledgeesStore = create<PledgeesState>((set, get) => {
     const { allPledgees, filters, currentPage, itemsPerPage } = get();
     let filteredPledgees = allPledgees;
 
-    filteredPledgees = Array.from(
-      new Map(
-        filteredPledgees.map((pledgee) => {
-          const key = `${pledgee.name}|${pledgee.address}|${pledgee.phone}|${pledgee.powerOfAttorney}`;
-          return [key, pledgee];
-        })
-      ).values()
-    );
-
     if (filters.searchFio) {
       filteredPledgees = filteredPledgees.filter((pledgee) =>
         pledgee.name.toLowerCase().includes(filters.searchFio.toLowerCase())
@@ -45,11 +36,15 @@ export const usePledgeesStore = create<PledgeesState>((set, get) => {
       const days = filters.period === "last7days" ? 7 : 30;
       const threshold = new Date(now.setDate(now.getDate() - days));
       filteredPledgees = filteredPledgees.filter((pledgee) => {
-        if (!pledgee.date_joined) return false;
-        const dateJoined = new Date(pledgee.date_joined);
-        return dateJoined >= threshold;
+        const date = new Date(
+          pledgee.registration_date !== "-"
+            ? pledgee.registration_date
+            : pledgee.birth_date
+        );
+        return date >= threshold;
       });
     }
+
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const paginatedPledgees = filteredPledgees.slice(start, end);
@@ -63,7 +58,7 @@ export const usePledgeesStore = create<PledgeesState>((set, get) => {
     currentPage: 1,
     itemsPerPage: 10,
     filters: {
-      period: "last7days",
+      period: "all",
       searchFio: "",
       type: "all",
     },

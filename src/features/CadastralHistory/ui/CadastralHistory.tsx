@@ -37,7 +37,7 @@ export function CadastralHistory() {
         ) => {
           setFilters(newFilters);
         },
-        150
+        10
       ),
     [setFilters]
   );
@@ -51,7 +51,6 @@ export function CadastralHistory() {
   if (error) {
     return <div className="p-6 text-red-600">Ошибка: {error}</div>;
   }
-
 
   return (
     <div className="p-6">

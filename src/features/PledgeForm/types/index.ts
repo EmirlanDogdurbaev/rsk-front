@@ -1,60 +1,35 @@
-export type Pledgor = {
-  id?: number;
-  type: "individual" | "legal";
-  lastName?: string;
-  firstName?: string;
-  middleName?: string;
-  inn?: string;
-  birthDate?: string;
-  passport?: string;
-  issuedBy?: string;
-  passportIssueDate?: string;
-  orgName?: string;
-  foundationDocument?: string;
-  registrationDate?: string;
-  representativeFullName?: string;
-  representativeInn?: string;
-  position?: string;
-  document?: string;
-  address?: string;
-  phone?: string;
+export type IndividualPledgor = {
+  type: "individual";
+  full_name: string;
+  inn: string;
+  birth_date: string;
+  passport_series: string;
+  passport_number: string;
+  passport_issued_by: string;
+  passport_issue_date: string;
+  marital_status?: string;
 };
 
+export type LegalEntityPledgor = {
+  type: "legal";
+  company_name: string;
+  company_inn: string;
+  founding_document: string;
+  registration_date: string;
+  authorized_person_full_name: string;
+  person_inn: string;
+  birth_date: string;
+  passport_series: string;
+  passport_number: string;
+  passport_issued_by: string;
+  passport_issue_date: string;
+  position: string;
+  person_document: string;
+};
+
+export type Pledgor = IndividualPledgor | LegalEntityPledgor;
 
 export type PledgeForm = {
   eniCode: string;
   inn: string;
-  pledgors: Pledgor[];
-  pledgeSubject: {
-    name: string;
-    description: string;
-    value: string;
-    location?: string;
-  };
-};
-
-export type PledgeStore = {
-  data: PledgeForm;
-
-  setField: <T extends keyof PledgeForm>(
-    field: T,
-    value: PledgeForm[T]
-  ) => void;
-
-  addPledgor: (type: "individual" | "legal") => void;
-
-  updatePledgor: (
-    index: number,
-    value: Partial<PledgeForm["pledgors"][number]>
-  ) => void;
-
-  removePledgor: (index: number) => void;
-
-  setPledgeSubject: (value: Partial<PledgeForm["pledgeSubject"]>) => void;
-
-  eniCodeCheck: (eniCode: string) => void;
-
-  getFullForm: () => PledgeForm;
-
-  setPledgors: (pledgors: Pledgor[]) => void;
 };

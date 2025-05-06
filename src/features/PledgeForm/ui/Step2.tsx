@@ -1,110 +1,45 @@
-import { format, parse } from "date-fns";
-import { useState, useEffect } from "react";
 import { usePledgeStore } from "../model/store";
 import { Button } from "../../../shared/ui";
 import { PledgorCard } from ".";
 
 export default function Step2() {
-  const { data, addPledgor, updatePledgor, removePledgor } = usePledgeStore();
+  const { data, addPledgor, updatePledgor, removePledgor, pledgeExists } =
+    usePledgeStore();
 
-  const [dates, setDates] = useState<
-    Record<
-      number,
-      {
-        birthDate: Date | null;
-        regDate: Date | null;
-        passportIssueDate: Date | null;
-      }
-    >
-  >({});
-
-  useEffect(() => {
-    const initialDates = data.pledgors.reduce((acc, pledgor, index) => {
-      acc[index] = {
-        birthDate: pledgor.birthDate
-          ? parse(pledgor.birthDate, "MM/dd/yyyy", new Date())
-          : null,
-        regDate: pledgor.registrationDate
-          ? parse(pledgor.registrationDate, "MM/dd/yyyy", new Date())
-          : null,
-        passportIssueDate: pledgor.passportIssueDate
-          ? parse(pledgor.passportIssueDate, "MM/dd/yyyy", new Date())
-          : null,
-      };
-      return acc;
-    }, {} as Record<number, { birthDate: Date | null; regDate: Date | null; passportIssueDate: Date | null }>);
-    setDates(initialDates);
-  }, [data.pledgors]);
-
-  const handleDateChange = (
-    date: Date | null,
-    type: "birth" | "registration" | "passportIssue",
-    index: number
-  ) => {
-    setDates((prev) => ({
-      ...prev,
-      [index]: {
-        ...prev[index],
-        ...(type === "birth" && { birthDate: date }),
-        ...(type === "registration" && { regDate: date }),
-        ...(type === "passportIssue" && { passportIssueDate: date }),
-      },
-    }));
-
-    updatePledgor(index, {
-      ...(type === "birth" && {
-        birthDate: date ? format(date, "MM/dd/yyyy") : undefined,
-      }),
-      ...(type === "registration" && {
-        registrationDate: date ? format(date, "MM/dd/yyyy") : undefined,
-      }),
-      ...(type === "passportIssue" && {
-        passportIssueDate: date ? format(date, "MM/dd/yyyy") : undefined,
-      }),
-    });
-  };
-
-  const handleRemovePledgor = (index: number) => {
-    removePledgor(index);
-    setDates((prev) => {
-      const newDates = { ...prev };
-      delete newDates[index];
-
-      const updatedDates: typeof newDates = {};
-      Object.keys(newDates)
-        .map(Number)
-        .sort()
-        .forEach((key, newIndex) => {
-          updatedDates[newIndex] = newDates[key];
-        });
-      return updatedDates;
-    });
-  };
+  console.log(
+    "Rendering Step2 with pledgors:",
+    data.pledgors,
+    "pledgeExists:",
+    pledgeExists
+  );
 
   return (
     <div className="px-0 py-6 space-y-6">
-      {data.pledgors.map((pledgor, index) => (
-        <PledgorCard
-          key={index}
-          index={index}
-          pledgor={pledgor}
-          updatePledgor={updatePledgor}
-          removePledgor={handleRemovePledgor}
-          canRemove={data.pledgors.length > 1}
-          dates={
-            dates[index] || {
-              birthDate: null,
-              regDate: null,
-              passportIssueDate: null,
-            }
-          }
-          handleDateChange={handleDateChange}
-        />
-      ))}
-
+      <h1 className="text-xl font-bold">Шаг 2: Информация о залогодателях</h1>
+      {pledgeExists && (
+        <p style={{ color: "red", fontSize: "14px" }}>
+          Редактирование невозможно, так как залог уже существует.
+        </p>
+      )}
+      <div>
+        {data.pledgors.map((pledgor, index) => (
+          <PledgorCard
+            key={index} // Используем только index, так как он уникален в массиве
+            index={index}
+            pledgor={pledgor}
+            updatePledgor={updatePledgor}
+            removePledgor={removePledgor}
+            canRemove={data.pledgors.length > 1 && !pledgeExists}
+          />
+        ))}
+      </div>
       <Button
         className="w-full bg-blue-600 text-white"
-        onClick={() => addPledgor("individual")}
+        onClick={() => {
+          console.log("Button clicked, calling addPledgor");
+          addPledgor("individual");
+        }}
+        disabled={pledgeExists}
       >
         + Добавить залогодателя
       </Button>

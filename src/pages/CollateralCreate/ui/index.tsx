@@ -1,20 +1,18 @@
 import { useState } from "react";
-import { usePledgeStore } from "../../../features/PledgeForm/model/store";
+// import { usePledgeStore } from "../../../features/PledgeForm/model/store";
 import { Button } from "../../../shared/ui";
-import Step2 from "../../../features/PledgeForm/ui/Step2";
 import Step1 from "../../../features/PledgeForm/ui/Step1";
+import Step2 from "../../../features/PledgeForm/ui/Step2";
 import Step3 from "../../../features/PledgeForm/ui/Step3";
 
 export default function CollateralCreate() {
   const [step, setStep] = useState(1);
-  const getFullForm = usePledgeStore((s) => s.getFullForm);
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const handleSubmit = () => {
-    const data = getFullForm();
-    console.log("📦 Отправка формы:", data);
+   
   };
 
   return (
@@ -90,7 +88,7 @@ export default function CollateralCreate() {
         <div className="w-full">
           {step === 1 && <Step1 />}
           {step === 2 && <Step2 />}
-          {step === 3 && <Step3 />}
+           {step === 3 && <Step3 />} 
         </div>
 
         <div className="flex justify-between">

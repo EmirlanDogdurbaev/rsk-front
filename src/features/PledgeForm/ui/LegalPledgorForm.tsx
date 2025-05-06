@@ -1,212 +1,370 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../shared/ui/select";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { Input } from "../../../shared/ui";
-import "../../../app/App.css";
+import { Input } from "../../../shared/ui/input";
+import { LegalEntityPledgor } from "../model/store";
 
 type LegalPledgorFormProps = {
   index: number;
-  pledgor: any;
-  updatePledgor: (index: number, value: any) => void;
-  dates: {
-    birthDate: Date | null;
-    regDate: Date | null;
-    passportIssueDate: Date | null;
-  };
-  handleDateChange: (
-    date: Date | null,
-    type: "birth" | "registration" | "passportIssue",
-    index: number
-  ) => void;
+  pledgor: LegalEntityPledgor;
+  updatePledgor: (index: number, value: Partial<LegalEntityPledgor>) => void;
 };
 
 export function LegalPledgorForm({
   index,
   pledgor,
   updatePledgor,
-  dates,
-  handleDateChange,
 }: LegalPledgorFormProps) {
+  // const { updatePledgor: storeUpdatePledgor } = usePledgeStore();
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      updatePledgor(index, { [field]: file });
+    }
+  };
+
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div style={{ marginTop: "10px" }}>
       <div>
-        <label className="block mb-1 text-sm text-gray-600">
-          Наименование ЮЛ
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Наименование ЮЛ *
         </label>
         <Input
-          placeholder="Введите наименование ЮЛ"
-          value={pledgor.orgName || ""}
-          onChange={(e) => updatePledgor(index, { orgName: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">ИНН</label>
-        <Input
-          placeholder="Введите ИНН"
-          value={pledgor.inn || ""}
-          onChange={(e) => updatePledgor(index, { inn: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">
-          Учредительный документ
-        </label>
-        <Input
-          placeholder="Введите учредительный документ"
-          value={pledgor.foundationDocument || ""}
+          value={pledgor.company_name}
           onChange={(e) =>
-            updatePledgor(index, { foundationDocument: e.target.value })
+            updatePledgor(index, { company_name: e.target.value })
           }
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Введите название"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
       </div>
-
-      <div className="relative">
-        <label className="block mb-1 text-sm text-gray-600">
-          Дата регистрации
-        </label>
-        <div className="relative">
-          <DatePicker
-            selected={dates.regDate || null}
-            onChange={(date: Date | null) =>
-              handleDateChange(date, "registration", index)
-            }
-            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            placeholderText="MM / DD / YYYY"
-            dateFormat="MM/dd/yyyy"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">
-          ФИО уполномоченного лица
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          ИНН *
         </label>
         <Input
+          value={pledgor.company_inn}
+          onChange={(e) =>
+            updatePledgor(index, { company_inn: e.target.value })
+          }
+          placeholder="Введите ИНН"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Учредительный документ *
+        </label>
+        <Input
+          value={pledgor.founding_document}
+          onChange={(e) =>
+            updatePledgor(index, { founding_document: e.target.value })
+          }
+          placeholder="Введите данные"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Дата регистрации *
+        </label>
+        <Input
+          type="date"
+          value={pledgor.registration_date}
+          onChange={(e) =>
+            updatePledgor(index, { registration_date: e.target.value })
+          }
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          ФИО уполномоченного лица *
+        </label>
+        <Input
+          value={pledgor.authorized_person_full_name}
+          onChange={(e) =>
+            updatePledgor(index, {
+              authorized_person_full_name: e.target.value,
+            })
+          }
           placeholder="Введите ФИО"
-          value={pledgor.representativeFullName || ""}
-          onChange={(e) =>
-            updatePledgor(index, { representativeFullName: e.target.value })
-          }
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
       </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">
-          ИНН уполномоченного лица
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          ИНН уполномоченного лица *
         </label>
         <Input
+          value={pledgor.inn}
+          onChange={(e) => updatePledgor(index, { inn: e.target.value })}
           placeholder="Введите ИНН"
-          value={pledgor.representativeInn || ""}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Дата рождения *
+        </label>
+        <Input
+          type="date"
+          value={pledgor.birth_date}
+          onChange={(e) => updatePledgor(index, { birth_date: e.target.value })}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Серия паспорта *
+        </label>
+        <Input
+          value={pledgor.passport_series}
           onChange={(e) =>
-            updatePledgor(index, { representativeInn: e.target.value })
+            updatePledgor(index, { passport_series: e.target.value })
           }
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Введите серию"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
       </div>
-
-      <div className="relative">
-        <label className="block mb-1 text-sm text-gray-600">
-          Дата рождения уполномоченного лица
-        </label>
-        <div className="relative">
-          <DatePicker
-            selected={dates.birthDate || null}
-            onChange={(date: Date | null) =>
-              handleDateChange(date, "birth", index)
-            }
-            className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            placeholderText="MM / DD / YYYY"
-            dateFormat="MM/dd/yyyy"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">
-          Номер, серия паспорта
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Номер паспорта *
         </label>
         <Input
-          placeholder="Номер, серия паспорта"
-          value={pledgor.passport || ""}
-          onChange={(e) => updatePledgor(index, { passport: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={pledgor.passport_number}
+          onChange={(e) =>
+            updatePledgor(index, { passport_number: e.target.value })
+          }
+          placeholder="Введите номер"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
       </div>
-
-      <div className="relative min-w-full">
-        <label className="block mb-1 text-sm text-gray-600">Дата выдачи</label>
-        <div className="relative">
-          <DatePicker
-            selected={dates.passportIssueDate || null}
-            onChange={(date: Date | null) =>
-              handleDateChange(date, "passportIssue", index)
-            }
-            className="min-w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            placeholderText="MM / DD / YYYY"
-            dateFormat="MM/dd/yyyy"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">Кем выдан</label>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Кем выдан *
+        </label>
         <Input
-          placeholder="Кем выдан"
-          value={pledgor.issuedBy || ""}
-          onChange={(e) => updatePledgor(index, { issuedBy: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={pledgor.passport_issued_by}
+          onChange={(e) =>
+            updatePledgor(index, { passport_issued_by: e.target.value })
+          }
+          placeholder="Введите данные"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
       </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">Должность</label>
-        <Select
-          value={pledgor.position || ""}
-          onValueChange={(value: string) =>
-            updatePledgor(index, { position: value })
-          }
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
         >
-          <SelectTrigger className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700">
-            <SelectValue placeholder="Введите должность" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="director">Директор</SelectItem>
-            <SelectItem value="manager">Менеджер</SelectItem>
-            <SelectItem value="accountant">Бухгалтер</SelectItem>
-            <SelectItem value="representative">Представитель</SelectItem>
-          </SelectContent>
-        </Select>
+          Дата выдачи *
+        </label>
+        <Input
+          type="date"
+          value={pledgor.passport_issue_date}
+          onChange={(e) =>
+            updatePledgor(index, { passport_issue_date: e.target.value })
+          }
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
       </div>
-
-      <div>
-        <label className="block mb-1 text-sm text-gray-600">Документ</label>
-        <Select
-          value={pledgor.document || ""}
-          onValueChange={(value: string) =>
-            updatePledgor(index, { document: value })
-          }
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
         >
-          <SelectTrigger className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700">
-            <SelectValue placeholder="Введите документ" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="power-of-attorney">Доверенность</SelectItem>
-            <SelectItem value="charter">Устав</SelectItem>
-            <SelectItem value="certificate">Свидетельство</SelectItem>
-          </SelectContent>
-        </Select>
+          Должность *
+        </label>
+        <Input
+          value={pledgor.position}
+          onChange={(e) => updatePledgor(index, { position: e.target.value })}
+          placeholder="Введите должность"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Документ уполномоченного лица
+        </label>
+        <Input
+          type="file"
+          onChange={(e) => handleFileChange(e, "person_document")}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Фото с паспортом
+        </label>
+        <Input
+          type="file"
+          onChange={(e) => handleFileChange(e, "with_passport_photo")}
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
       </div>
     </div>
   );

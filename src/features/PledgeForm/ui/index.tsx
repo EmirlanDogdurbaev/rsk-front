@@ -8,88 +8,111 @@ import {
 import { Button } from "../../../shared/ui";
 import { IndividualPledgorForm } from "./IndividualPledgorForm";
 import { LegalPledgorForm } from "./LegalPledgorForm";
+import { memo } from "react";
+import { IndividualPledgor, LegalEntityPledgor } from "../model/store";
 
 type PledgorCardProps = {
   index: number;
-  pledgor: any;
-  updatePledgor: (index: number, value: any) => void;
+  pledgor: IndividualPledgor | LegalEntityPledgor;
+  updatePledgor: (
+    index: number,
+    value: Partial<PledgorCardProps["pledgor"]>
+  ) => void;
   removePledgor: (index: number) => void;
   canRemove: boolean;
-  dates: {
-    birthDate: Date | null;
-    regDate: Date | null;
-    passportIssueDate: Date | null;
-  };
-  handleDateChange: (
-    date: Date | null,
-    type: "birth" | "registration" | "passportIssue",
-    index: number
-  ) => void;
 };
 
-export function PledgorCard({
+const PledgorCardComponent = ({
   index,
   pledgor,
   updatePledgor,
   removePledgor,
   canRemove,
-  dates,
-  handleDateChange,
-}: PledgorCardProps) {
+}: PledgorCardProps) => {
+  console.log(`Rendering PledgorCard #${index + 1} with type: ${pledgor.type}`);
+
   return (
-    <div className="space-y-4 relative">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Залогодатель №{index + 1}</h2>
+    <div
+      style={{
+        border: "1px solid black",
+        padding: "10px",
+        marginBottom: "10px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2 style={{ fontSize: "16px", fontWeight: "bold" }}>
+          Залогодатель #{index + 1}
+        </h2>
         {canRemove && (
           <Button
             variant="outline"
-            className="text-red-600 border-red-600 hover:bg-red-50"
+            style={{
+              color: "red",
+              borderColor: "red",
+              backgroundColor: "transparent",
+            }}
             onClick={() => removePledgor(index)}
           >
             Удалить
           </Button>
         )}
       </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <label className="block mb-1 text-sm text-gray-600">
-            Выберите тип залогодателя
-          </label>
-          <Select
-            value={pledgor.type}
-            onValueChange={(value: "individual" | "legal") =>
-              updatePledgor(index, { type: value })
-            }
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Выберите тип" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="individual">Физическое лицо</SelectItem>
-              <SelectItem value="legal">Юридическое лицо</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Выберите тип залогодателя
+        </label>
+        <Select
+          value={pledgor.type}
+          onValueChange={(value) =>
+            updatePledgor(index, { type: value as "individual" | "legal" })
+          }
+        >
+          <SelectTrigger style={{ width: "100%" }}>
+            <SelectValue placeholder="Выберите тип" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="individual">Физическое лицо</SelectItem>
+            <SelectItem value="legal">Юридическое лицо</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-
       {pledgor.type === "individual" ? (
         <IndividualPledgorForm
           index={index}
-          pledgor={pledgor}
+          pledgor={pledgor as IndividualPledgor}
           updatePledgor={updatePledgor}
-          dates={dates}
-          handleDateChange={handleDateChange}
         />
       ) : (
         <LegalPledgorForm
           index={index}
-          pledgor={pledgor}
+          pledgor={pledgor as LegalEntityPledgor}
           updatePledgor={updatePledgor}
-          dates={dates}
-          handleDateChange={handleDateChange}
         />
       )}
     </div>
   );
-}
+};
+
+export const PledgorCard = memo(
+  PledgorCardComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.pledgor === nextProps.pledgor &&
+      prevProps.index === nextProps.index &&
+      prevProps.canRemove === nextProps.canRemove
+    );
+  }
+);

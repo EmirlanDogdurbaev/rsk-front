@@ -1,58 +1,47 @@
-import { Button, Input } from "../../../shared/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../shared/ui/select";
+import { useState } from "react";
 import { usePledgeStore } from "../model/store";
+import { Modal } from "./Modal";
+import { Button, Input } from "../../../shared/ui";
 
 export default function Step1() {
-  const { data, setField, setPledgors, setPledgeSubject } = usePledgeStore();
-
-  const list = [{ eni1: "12312331" }, { eni1: "12312332" }];
-
-  const handleEniSelect = (value: string) => {
-    setField("eniCode", value);
-  };
+  const { data, setField, pledgeExists, checkPledge } = usePledgeStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"exists" | "edit" | null>(null);
 
   const handleInnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setField("inn", e.target.value);
   };
 
-  const handleCheck = () => {
-    const mockResponse = {
-      eniCode: data.eniCode,
-      inn: "123456789012",
-      pledgors: [
-        {
-          type: "individual" as const,
-          lastName: "Иванов",
-          firstName: "Иван",
-          middleName: "Иванович",
-          inn: "123456789012",
-          passport: "AB123456",
-          birthDate: "01/01/1990",
-          issuedBy: "УВД г. Алматы",
-          passportIssueDate: "01/01/2010",
-          address: "",
-          phone: "",
-          document: "",
-        },
-      ],
-      pledgeSubject: {
-        name: "Автомобиль",
-        description: "Toyota Camry 2020",
-        location: "Алматы, ул. Абая 10",
-      },
-    };
+  const handleEniChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setField("eniCode", e.target.value);
+  };
 
-    if (mockResponse.eniCode === data.eniCode) {
-      setField("inn", mockResponse.inn);
-      setPledgors(mockResponse.pledgors);
-      setPledgeSubject(mockResponse.pledgeSubject);
+  const handleCheck = async () => {
+    if (!data.eniCode || !data.inn) return;
+
+    try {
+      const result = await checkPledge();
+      if (result.exists) {
+        setIsModalOpen(true);
+        setModalType(result.innMatch ? "exists" : "edit");
+      } else {
+        usePledgeStore.getState().setPledgeExists(false);
+      }
+    } catch (error) {
+      console.error("Ошибка проверки:", error);
+      usePledgeStore.getState().setPledgeExists(false);
     }
+  };
+
+  const handleModalConfirm = () => {
+    if (modalType === "edit") {
+      usePledgeStore.getState().setPledgeExists(false);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -61,20 +50,12 @@ export default function Step1() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block mb-1 text-sm text-gray-600">Код ЕНИ</label>
-          <div className="flex items-center space-x-2">
-            <Select value={data.eniCode} onValueChange={handleEniSelect}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Выберите код ЕНИ" />
-              </SelectTrigger>
-              <SelectContent>
-                {list.map((item) => (
-                  <SelectItem key={item.eni1} value={item.eni1}>
-                    {item.eni1}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Input
+            value={data.eniCode}
+            onChange={handleEniChange}
+            placeholder="Введите код ЕНИ"
+            disabled={pledgeExists}
+          />
         </div>
         <div>
           <label className="block mb-1 text-sm text-gray-600">
@@ -83,13 +64,65 @@ export default function Step1() {
           <Input
             value={data.inn}
             onChange={handleInnChange}
-            placeholder="Введите ИНН залогодателя"
+            placeholder="Введите ИНН"
+            disabled={pledgeExists}
           />
         </div>
       </div>
-      <Button className="w-full bg-blue-600 text-white" onClick={handleCheck}>
+      <Button
+        className="w-full bg-blue-600 text-white"
+        onClick={handleCheck}
+        disabled={!data.eniCode || !data.inn || pledgeExists}
+      >
         Проверить в базе
       </Button>
+
+      {pledgeExists && (
+        <p className="text-red-600 text-sm mt-2">
+          Залог с таким кодом ЕНИ и ИНН уже существует. Редактирование
+          невозможно.
+        </p>
+      )}
+
+      <Modal isOpen={isModalOpen} onClose={handleModalCancel}>
+        {modalType === "exists" ? (
+          <>
+            <h3 className="text-lg font-semibold">Залог уже существует</h3>
+            <p className="text-sm text-gray-600">
+              Залог с таким кодом ЕНИ и ИНН уже зарегистрирован.
+            </p>
+            <Button
+              variant="outline"
+              onClick={handleModalCancel}
+              className="border-gray-600 text-gray-600 mt-4"
+            >
+              Закрыть
+            </Button>
+          </>
+        ) : modalType === "edit" ? (
+          <>
+            <h3 className="text-lg font-semibold">Несоответствие ИНН</h3>
+            <p className="text-sm text-gray-600">
+              Код ЕНИ существует, но ИНН не совпадает. Отредактировать данные?
+            </p>
+            <div className="space-x-2 mt-4">
+              <Button
+                onClick={handleModalConfirm}
+                className="bg-blue-600 text-white"
+              >
+                Отредактировать
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleModalCancel}
+                className="border-gray-600 text-gray-600"
+              >
+                Отмена
+              </Button>
+            </div>
+          </>
+        ) : null}
+      </Modal>
     </div>
   );
 }

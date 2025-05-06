@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
 import { usePledgeStore } from "../model/store";
-import { Input } from "../../../shared/ui";
+import { Button } from "../../../shared/ui";
+import { Input } from "../../../shared/ui/input";
 import {
   Select,
   SelectContent,
@@ -9,110 +8,268 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../shared/ui/select";
-import { Textarea } from "../../../shared/ui/textarea";
+
+const collateralTypes = [
+  { id: 1, name: "Автомобиль" },
+  { id: 2, name: "Недвижимость" },
+  { id: 3, name: "Оборудование" },
+];
+
+const regions = [
+  { id: 1, name: "Москва" },
+  { id: 2, name: "Санкт-Петербург" },
+  { id: 3, name: "Казань" },
+];
+
+const districts = [
+  { id: 1, name: "Центральный" },
+  { id: 2, name: "Северный" },
+  { id: 3, name: "Южный" },
+];
 
 export default function Step3() {
-  const { data, setPledgeSubject, setField } = usePledgeStore();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchEniCode = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const newEniCode = Math.floor(100000 + Math.random() * 900000).toString();
-      setField("eniCode", newEniCode);
-    } catch (error) {
-      console.error("Ошибка при получении кода ЕНИ:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!data.eniCode) {
-      fetchEniCode();
-    }
-  }, [data.eniCode, setField]);
-
-  const handleEniCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      setField("eniCode", value);
-    }
-  };
+  const { data, updateCollateral, submitPledge } = usePledgeStore();
 
   return (
     <div className="px-0 py-6 space-y-6">
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1 text-sm text-gray-600">
-              Предмет залога
-            </label>
-            <Select
-              value={data.pledgeSubject.name || ""}
-              onValueChange={(value: string) =>
-                setPledgeSubject({ name: value })
-              }
-            >
-              <SelectTrigger className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <SelectValue placeholder="Выберите предмет залога" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="car">Автомобиль</SelectItem>
-                <SelectItem value="real-estate">Недвижимость</SelectItem>
-                <SelectItem value="equipment">Оборудование</SelectItem>
-                <SelectItem value="other">Прочее</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="relative">
-            <label className="block mb-1 text-sm text-gray-600">Код ЕНИ</label>
-            <div className="relative ">
-              <Input
-                placeholder="Введите код ЕНИ"
-                value={data.eniCode}
-                onChange={handleEniCodeChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={isLoading}
-              />
-              <Search
-                className={`absolute right-2 top-2 h-5 w-5 ${
-                  isLoading ? "text-gray-400" : "text-blue-600 cursor-pointer"
-                }`}
-                onClick={isLoading ? undefined : fetchEniCode}
-              />
-            </div>
-          </div>
-
-          <div className="w-full col-span-2">
-            <label className="block mb-1 text-sm text-gray-600">
-              Местонахождение залога
-            </label>
-            <Input
-              placeholder="Введите местонахождение залога"
-              value={data.pledgeSubject.location || ""}
-              onChange={(e) => setPledgeSubject({ location: e.target.value })}
-              className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="col-span-2">
-            <label className="block mb-1 text-sm text-gray-600">
-              Описание залога
-            </label>
-            <Textarea
-              placeholder="Введите описание залога"
-              value={data.pledgeSubject.description}
-              onChange={(e) =>
-                setPledgeSubject({ description: e.target.value })
-              }
-              className="w-full p-2 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
+      <h1 className="text-xl font-bold">Шаг 3: Создание залога</h1>
+      <div>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Код ЕНИ *
+        </label>
+        <Input
+          value={data.collateral.eni_code}
+          onChange={(e) => updateCollateral({ eni_code: e.target.value })}
+          placeholder="Введите код ЕНИ"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
       </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Город/Село *
+        </label>
+        <Input
+          value={data.collateral.city}
+          onChange={(e) => updateCollateral({ city: e.target.value })}
+          placeholder="Введите город/село"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Улица *
+        </label>
+        <Input
+          value={data.collateral.street}
+          onChange={(e) => updateCollateral({ street: e.target.value })}
+          placeholder="Введите улицу"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          № дома *
+        </label>
+        <Input
+          value={data.collateral.house_number}
+          onChange={(e) => updateCollateral({ house_number: e.target.value })}
+          placeholder="Введите номер дома"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Залоговая стоимость
+        </label>
+        <Input
+          type="number"
+          value={data.collateral.collateral_value || ""}
+          onChange={(e) =>
+            updateCollateral({ collateral_value: e.target.value })
+          }
+          placeholder="Введите стоимость"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Залоговый коэффициент
+        </label>
+        <Input
+          type="number"
+          step="0.01"
+          value={data.collateral.collateral_coefficient || ""}
+          onChange={(e) =>
+            updateCollateral({ collateral_coefficient: e.target.value })
+          }
+          placeholder="Введите коэффициент"
+          style={{
+            width: "100%",
+            padding: "8px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Предмет залога *
+        </label>
+        <Select
+          value={data.collateral.collateral_type.toString()}
+          onValueChange={(value) =>
+            updateCollateral({ collateral_type: Number(value) })
+          }
+        >
+          <SelectTrigger style={{ width: "100%" }}>
+            <SelectValue placeholder="Выберите предмет залога" />
+          </SelectTrigger>
+          <SelectContent>
+            {collateralTypes.map((type) => (
+              <SelectItem key={type.id} value={type.id.toString()}>
+                {type.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Область *
+        </label>
+        <Select
+          value={data.collateral.region.toString()}
+          onValueChange={(value) => updateCollateral({ region: Number(value) })}
+        >
+          <SelectTrigger style={{ width: "100%" }}>
+            <SelectValue placeholder="Выберите область" />
+          </SelectTrigger>
+          <SelectContent>
+            {regions.map((region) => (
+              <SelectItem key={region.id} value={region.id.toString()}>
+                {region.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: "5px",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          Район *
+        </label>
+        <Select
+          value={data.collateral.district.toString()}
+          onValueChange={(value) =>
+            updateCollateral({ district: Number(value) })
+          }
+        >
+          <SelectTrigger style={{ width: "100%" }}>
+            <SelectValue placeholder="Выберите район" />
+          </SelectTrigger>
+          <SelectContent>
+            {districts.map((district) => (
+              <SelectItem key={district.id} value={district.id.toString()}>
+                {district.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Button
+        className="w-full bg-blue-600 text-white"
+        onClick={() => submitPledge()}
+      >
+        Отправить запрос
+      </Button>
     </div>
   );
 }

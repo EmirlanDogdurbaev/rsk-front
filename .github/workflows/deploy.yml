@@ -6,14 +6,36 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          export PATH="$HOME/.bun/bin:$PATH"
+          bun --version
+
+      - name: Install dependencies
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          bun install
+
+      - name: Build
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          bun run build
+
       - name: Setup SSH
+        if: success() 
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -23,6 +45,7 @@ jobs:
           ls -la ~/.ssh
 
       - name: Deploy to VM
+        if: success() 
         run: |
           ssh -vvv ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} << 'EOF'
             echo "Connected to VM"
